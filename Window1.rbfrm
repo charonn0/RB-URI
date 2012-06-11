@@ -64,7 +64,7 @@ Begin Window Window1
       Underline       =   ""
       UseFocusRing    =   True
       Visible         =   True
-      Width           =   757
+      Width           =   665
    End
    Begin Listbox Listbox1
       AutoDeactivate  =   True
@@ -102,7 +102,7 @@ Begin Window Window1
       ScrollbarHorizontal=   ""
       ScrollBarVertical=   True
       SelectionType   =   0
-      TabIndex        =   1
+      TabIndex        =   4
       TabPanelIndex   =   0
       TabStop         =   True
       TextFont        =   "System"
@@ -120,15 +120,15 @@ Begin Window Window1
       Bold            =   ""
       ButtonStyle     =   0
       Cancel          =   ""
-      Caption         =   "Parse"
-      Default         =   True
+      Caption         =   "Validate"
+      Default         =   False
       Enabled         =   True
       Height          =   22
       HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   762
+      Left            =   714
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
@@ -141,10 +141,72 @@ Begin Window Window1
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   1
+      Top             =   0
+      Underline       =   ""
+      Visible         =   True
+      Width           =   57
+   End
+   Begin PushButton PushButton2
+      AutoDeactivate  =   True
+      Bold            =   ""
+      ButtonStyle     =   0
+      Cancel          =   ""
+      Caption         =   "Parse"
+      Default         =   True
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   666
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Scope           =   0
+      TabIndex        =   1
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   0
       Underline       =   ""
       Visible         =   True
       Width           =   48
+   End
+   Begin PushButton PushButton3
+      AutoDeactivate  =   True
+      Bold            =   ""
+      ButtonStyle     =   0
+      Cancel          =   ""
+      Caption         =   "Speed"
+      Default         =   False
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   771
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Scope           =   0
+      TabIndex        =   3
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   0
+      Underline       =   ""
+      Visible         =   True
+      Width           =   42
    End
 End
 #tag EndWindow
@@ -174,9 +236,8 @@ End
 		  'Break
 		  'End If
 		  
-		  
 		  ''URL = "http://bobbytables:secret123@www.example.net/sections.html#Section31"
-		  ''Dim s As String = URL   
+		  ''Dim s As String = URL
 		  ''//s is now "http://bobbytables:secret123@www.example.net/sections.html#Section31"
 		  ''Break
 		  '
@@ -197,7 +258,71 @@ End
 
 #tag EndWindowCode
 
+#tag Events Listbox1
+	#tag Event
+		Function CellTextPaint(g As Graphics, row As Integer, column As Integer, x as Integer, y as Integer) As Boolean
+		  If column = 1 And row = Me.ListCount - 1 Then
+		    g.ForeColor = &c0000FF
+		    g.Underline = True
+		    g.DrawString(Me.Cell(row, column), x, y)
+		    Return True
+		  End If
+		  
+		End Function
+	#tag EndEvent
+	#tag Event
+		Function CellClick(row as Integer, column as Integer, x as Integer, y as Integer) As Boolean
+		  If column = 1 And row = Me.ListCount - 1 Then
+		    ShowURL(Me.Cell(row, column))
+		    Return True
+		  End If
+		  
+		End Function
+	#tag EndEvent
+	#tag Event
+		Sub MouseMove(X As Integer, Y As Integer)
+		  Dim row, column As Integer
+		  row = Me.RowFromXY(X, Y)
+		  column = Me.ColumnFromXY(X, Y)
+		  
+		  If column = 1 And row = Me.ListCount - 1 Then
+		    Me.MouseCursor = System.Cursors.FingerPointer
+		  Else
+		    Me.MouseCursor = System.Cursors.StandardPointer
+		  End If
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag Events PushButton1
+	#tag Event
+		Sub Action()
+		  If URI.Validate(TextField1.Text) Then
+		    MsgBox("URI is valid")
+		  Else
+		    Select Case URI.ValidationError
+		    Case 1
+		      MsgBox("Conversion is not safe since you won't get the same data back again")
+		    Case 2
+		      MsgBox("Missing Protocol")
+		    Case 3
+		      MsgBox("Username was expected but not found")
+		    Case 4
+		      MsgBox("Password was expected but not found")
+		    Case 5
+		      MsgBox("Port exceeded the allowed range (0-65535)")
+		    Case 6
+		      MsgBox("The domain name is malformed")
+		    Case 7
+		      MsgBox("'@' was not found")
+		    Else
+		      MsgBox(Str(URI.ValidationError))
+		    End Select
+		  End If
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PushButton2
 	#tag Event
 		Sub Action()
 		  Dim url As New URI(TextField1.Text)
@@ -207,10 +332,54 @@ End
 		  Listbox1.AddRow("Password", URL.Password)
 		  Listbox1.AddRow("Domain", URL.FQDN)
 		  Listbox1.AddRow("Port", Format(URL.Port, "######"))
-		  Listbox1.AddRow("Server File", URL.ServerFile)
+		  Listbox1.AddRow("Server File", Join(URL.ServerFile, "/"))
 		  Listbox1.AddRow("Arguments", Join(URL.Arguments, "&"))
 		  Listbox1.AddRow("Fragment", URL.Fragment)
-		  Listbox1.AddRow("Covert Back", URL)
+		  Listbox1.AddRow("Convert Back", URL)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PushButton3
+	#tag Event
+		Sub Action()
+		  Dim url As New URI("random://stuff.here:123/that/validates?a=b&c=d#42")
+		  Dim atotals(), btotals(), ctotals() As UInt64
+		  
+		  For i As Integer = 0 To 99
+		    Dim starting, ending As UInt64
+		    Dim b As Boolean
+		    Dim urlstring As String = TextField1.Text
+		    
+		    starting = Microseconds
+		    url = urlstring  //Convert a string to a URI
+		    ending = Microseconds
+		    atotals.Append(ending - starting)
+		    
+		    starting = Microseconds
+		    b = URI.Validate(urlstring)  //Validate a string
+		    ending = Microseconds
+		    btotals.Append(ending - starting)
+		    
+		    starting = Microseconds
+		    urlstring = url  //Convert a URI to a String
+		    ending = Microseconds
+		    ctotals.Append(ending - starting)
+		    
+		  Next
+		  
+		  Dim averageconvertin, averageconvertout, averagevalidate As Integer
+		  For i As Integer = 0 To UBound(btotals)
+		    averageconvertin = averageconvertin + atotals(i)
+		    averagevalidate = averagevalidate + btotals(i)
+		    averageconvertout = averageconvertout + ctotals(i)
+		  Next
+		  averageconvertin = averageconvertin / (UBound(atotals) + 1)
+		  averagevalidate = averagevalidate / (UBound(atotals) + 1)
+		  averageconvertout = averageconvertout / (UBound(atotals) + 1)
+		  
+		  Call MsgBox("Parsing the URL: " + Str(averageconvertin) + "μs" + EndOfLine + _
+		  "Validating the URL: " + Str(averagevalidate) + "μs" + EndOfLine + _
+		  "Converting back to a string: " + Str(averageconvertout) + "μs", 0, "Average Completion Times")
 		End Sub
 	#tag EndEvent
 #tag EndEvents

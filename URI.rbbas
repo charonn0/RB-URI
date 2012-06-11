@@ -7,6 +7,54 @@ Protected Class URI
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		 Shared Function DefaultPort(ProtocolName As String) As Integer
+		  Select Case ProtocolName
+		  Case "http"
+		    Return 80
+		    
+		  Case "https"
+		    Return 443
+		    
+		  Case "ftp"
+		    Return 21
+		    
+		  Case "irc"
+		    Return 6667
+		    
+		  Case "ssh"
+		    Return 22
+		    
+		  Case "Telnet"
+		    Return 23
+		    
+		  Case "SMTP"
+		    Return 25
+		    
+		  Case "Gopher"
+		    Return 70
+		    
+		  Case "finger"
+		    Return 79
+		    
+		  Case "sftp"
+		    Return 115
+		    
+		  Case "SMB"
+		    Return 445
+		    
+		  Case "NFS"
+		    Return 2049
+		    
+		  Case "IMAP"
+		    Return 143
+		    
+		  Else //more later
+		    Return 0
+		  End Select
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Operator_Compare(CompareTo As URI) As Integer
 		  //Return values:
 		  // -1: CompareTo < Me -Or- not equal (if CaseSensitive = False)
@@ -28,6 +76,33 @@ Protected Class URI
 		  End If
 		  
 		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Operator_Convert() As FolderItem
+		  //This method overloads the assigment operator ("=") so that any instance of the URI class can be converted directly into a 
+		  '(probably) cross-platform URL shortcut file in the user's Temp directory:
+		  '     Dim URL As New URI("hxxp://www.example.net")
+		  '     URL.ServerFile = "/sections.html"
+		  '     URL.Fragment = "Section31"
+		  '     If URL.Username = "" Then
+		  '       URL.Username = "bobbytables"
+		  '       URL.Password = "secret123"
+		  '     End If
+		  '     Dim shortcut As FolderItem = URL   //shortcut is now a shortcut file pointing to:
+		  '     hxxp://bobbytables:secret123@www.example.net/sections.html#Section31
+		  
+		  
+		  Dim URL As String = Me
+		  Dim f As FolderItem = SpecialFolder.Temporary.Child("Shortcut to " + FQDN + ".URL")
+		  Dim tos As TextOutputStream
+		  tos = tos.Create(f)
+		  tos.WriteLine("[InternetShortcut]")
+		  tos.WriteLine("URL=" + URL)
+		  tos.Close
+		  
+		  Return f
 		End Function
 	#tag EndMethod
 
@@ -63,8 +138,8 @@ Protected Class URI
 		    URL = URL + ":" + Format(Port, "#####")
 		  End If
 		  
-		  If ServerFile <> "" Then
-		    URL = URL + ServerFile
+		  If Join(ServerFile, "/") <> "" Then
+		    URL = URL + Join(ServerFile, "/")
 		  Else
 		    If Protocol <> "mailto" Then URL = URL + "/"
 		  End If
@@ -84,7 +159,7 @@ Protected Class URI
 	#tag Method, Flags = &h0
 		Sub Operator_Convert(URL As String)
 		  //This method overloads the assigment operator ("=") so that
-		  //any instance of the URI class can be assigned directly to a 
+		  //any instance of the URI class can be assigned directly to a
 		  //string:
 		  '       Dim URL As New URI("hxxp://bobbytables:secret123@www.example.net")
 		  '       //URL now contains "hxxp://bobbytables:secret123@www.example.net"
@@ -101,7 +176,7 @@ Protected Class URI
 		  //The Parse method accepts a string as input and parses that string as a URI into the various class properties.
 		  //Parse is called by the class constructor and by the Operator_Convert(String) method.
 		  
-		  If NthField(URL, ":", 1) <> "mailto" Then 
+		  If NthField(URL, ":", 1) <> "mailto" Then
 		    If InStr(URL, "://") > 0 Then
 		      Protocol = NthField(URL, "://", 1)
 		      URL = URL.Replace(Protocol + "://", "")
@@ -116,7 +191,10 @@ Protected Class URI
 		    End If
 		    
 		    If Instr(URL, ":") > 0 Then //  Domain:Port
-		      Port = Val(NthField(URL, ":", 2))
+		      Dim s As String = NthField(URL, ":", 2)
+		      s = NthField(s, "?", 1)
+		      Port = Val(s)
+		      
 		      URL = URL.Replace(":" + Format(Port, "######"), "")
 		    End If
 		    
@@ -129,11 +207,11 @@ Protected Class URI
 		    URL = URL.Replace(FQDN, "")
 		    
 		    If InStr(URL, "?") > 0 Then
-		      ServerFile = NthField(URL, "?", 1)  //    /foo/bar.php
-		      URL = URL.Replace(ServerFile + "?", "")
+		      ServerFile = Split(NthField(URL, "?", 1), "/")  //    /foo/bar.php
+		      URL = URL.Replace(Join(ServerFile, "/") + "?", "")
 		      Arguments = Split(URL, "&")
-		    Else
-		      ServerFile = URL
+		    ElseIf URL.Trim <> "" Then
+		      ServerFile.Append(URL)
 		    End If
 		  Else
 		    Protocol = "mailto"
@@ -149,6 +227,123 @@ Protected Class URI
 		    End If
 		  End If
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		 Shared Function Validate(URL As String) As Boolean
+		  //This function mirrors the Parse function, but with validation (which makes it 4x slower than Parse)
+		  //Returns False on the first validation error and sets the appropriate error code.
+		  //Note that this only verifies that no errors occured during parsing, not that the URL is neccessarily valid.
+		  '0 = No error
+		  '1 = Conversion is not safe since you won't get the same data back again (probably a really weird URL or not a URL at all)
+		  '2 = Missing Protocol
+		  '3 = Username was expected but not found
+		  '4 = Password was expected but not found
+		  '5 = Port exceeded the allowed range (0-65535)
+		  '6 = The domain name is incomplete
+		  '7 = '@' was not found
+		  
+		  Dim tmp As New URI(URL)
+		  If tmp <> URL Then 
+		    ValidationError = 1
+		    Return False
+		  End If
+		  
+		  If NthField(URL, ":", 1) <> "mailto" Then
+		    If InStr(URL, "://") > 0 Then
+		      tmp.Protocol = NthField(URL, "://", 1)
+		      URL = URL.Replace(tmp.Protocol + "://", "")
+		    Else
+		      ValidationError = 2
+		      Return False
+		    End If
+		    
+		    If Instr(URL, "@") > 0 Then //  USER:PASS@Domain
+		      tmp.Username = NthField(URL, ":", 1)
+		      If tmp.Username.Trim = "" Then 
+		        ValidationError = 3
+		        Return False
+		      End If
+		      URL = URL.Replace(tmp.Username + ":", "")
+		      
+		      tmp.Password = NthField(URL, "@", 1)
+		      If tmp.Password.Trim = "" Then 
+		        ValidationError = 4
+		        Return False
+		      End If
+		      URL = URL.Replace(tmp.Password + "@", "")
+		    End If
+		    
+		    If Instr(URL, ":") > 0 Then //  Domain:Port
+		      Dim s As String = NthField(URL, ":", 2)
+		      s = NthField(s, "?", 1)
+		      tmp.Port = Val(s)
+		      If tmp.Port > 65535 Or tmp.Port < 0 Then  
+		        ValidationError = 5
+		        Return False
+		      End If
+		      URL = URL.Replace(":" + Format(tmp.Port, "######"), "")
+		    End If
+		    
+		    If Instr(URL, "#") > 0 Then
+		      tmp.Fragment = NthField(URL, "#", 2)  //    #fragment
+		      //fragments are optional and not validated
+		      URL = URL.Replace("#" + tmp.Fragment, "")
+		    End If
+		    
+		    tmp.FQDN = NthField(URL, "/", 1)  //  [sub.]domain.tld
+		    URL = URL.Replace(tmp.FQDN, "")
+		    
+		    If ( _
+		      (CountFields(tmp.FQDN.Trim, ".") <= 1 _
+		      Or Left(tmp.FQDN.Trim, 1) = "." _
+		      Or Right(tmp.FQDN.Trim, 1) = ".") _
+		      And InStr(tmp.FQDN.Trim, ".") > 0 _
+		      ) _
+		      Or tmp.FQDN.Trim = "" Then
+		      //Technically, all domain names end in a full stop: www[.]google[.]com[.]
+		      //But no one actually does this so we'll call it a typo
+		      ValidationError = 6
+		      Return False
+		    End If
+		    
+		    If InStr(URL, "?") > 0 Then
+		      tmp.ServerFile = Split(NthField(URL, "?", 1), "/")  //    /foo/bar.php
+		      URL = URL.Replace(Join(tmp.ServerFile, "/") + "?", "")
+		      tmp.Arguments = Split(URL, "&")
+		    ElseIf URL.Trim <> "" Then
+		      tmp.ServerFile.Append(URL)
+		    End If
+		  Else
+		    tmp.Protocol = "mailto"
+		    URL = Replace(URL, "mailto:", "")
+		    If Instr(URL, "@") <= 0 Then 
+		      ValidationError = 7
+		      Return False
+		    End If
+		    tmp.Username = NthField(URL, "@", 1)
+		    URL = Replace(URL, tmp.Username + "@", "")
+		    
+		    If tmp.Username.Trim = "" Then
+		      ValidationError = 3
+		      Return False
+		    End If
+		    
+		    If InStr(URL, "?") > 0 Then
+		      tmp.FQDN = NthField(URL, "?", 1)
+		      tmp.Arguments = Split(NthField(URL, "?", 2), "&")
+		    Else
+		      tmp.FQDN = URL
+		    End If
+		    
+		    If tmp.FQDN.Trim = "" Then
+		      ValidationError = 6
+		      Return False
+		    End If
+		  End If
+		  ValidationError = 0
+		  Return True
+		End Function
 	#tag EndMethod
 
 
@@ -194,18 +389,6 @@ Protected Class URI
 		     Else
 		       //We get here if EITHER URI is set to CaseSensitive (even if the other one isn't CaseSensitive)
 		     End If
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	#tag EndNote
 
 	#tag Note, Name = How to use this class
@@ -323,19 +506,19 @@ Protected Class URI
 			
 			e.g.
 			
-			   Dim url1 As New URI("http://www.example.net")
-			   Dim url2 As New URI("http://www.example.net")
-			   url2.Port = 0
-			   
+			Dim url1 As New URI("http://www.example.net")
+			Dim url2 As New URI("http://www.example.net")
+			url2.Port = 0
+			
 			url1 and url2 would still be equivalent since converting them to strings yields the same result "http://www.example.net"
 			
 			However,
 			
-			   Dim url1 As New URI("http://www.example.net")
-			   Dim url2 As New URI("http://www.example.net")
-			   url2.Port = 80
+			Dim url1 As New URI("http://www.example.net")
+			Dim url2 As New URI("http://www.example.net")
+			url2.Port = 80
 			
-			in this case, url1 and url2 are not equal since url1 converts to "http://www.example.net" whereas 
+			in this case, url1 and url2 are not equal since url1 converts to "http://www.example.net" whereas
 			url2 converts to "http://www.example.net:80"
 			
 			This class does not know about default ports and will explicitly specify any port assigned, even the default
@@ -350,7 +533,7 @@ Protected Class URI
 
 	#tag Property, Flags = &h0
 		#tag Note
-			The full remote file path, if any.
+			The full remote file path, if any, stored as a one-dimensional string array of the path's members.
 			
 			e.g.
 			
@@ -361,11 +544,15 @@ Protected Class URI
 			/  (top directory or default page, same as empty string)
 			"" (empty string)
 		#tag EndNote
-		ServerFile As String
+		ServerFile() As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
 		Username As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		Shared ValidationError As Integer
 	#tag EndProperty
 
 
@@ -421,12 +608,6 @@ Protected Class URI
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Protocol"
-			Group="Behavior"
-			Type="String"
-			EditorType="MultiLineEditor"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="ServerFile"
 			Group="Behavior"
 			Type="String"
 			EditorType="MultiLineEditor"
