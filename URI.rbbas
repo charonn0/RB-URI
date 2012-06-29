@@ -81,18 +81,8 @@ Protected Class URI
 
 	#tag Method, Flags = &h0
 		Function Operator_Convert() As FolderItem
-		  //This method overloads the assigment operator ("=") so that any instance of the URI class can be converted directly into a 
-		  '(probably) cross-platform URL shortcut file in the user's Temp directory:
-		  '     Dim URL As New URI("hxxp://www.example.net")
-		  '     URL.ServerFile = "/sections.html"
-		  '     URL.Fragment = "Section31"
-		  '     If URL.Username = "" Then
-		  '       URL.Username = "bobbytables"
-		  '       URL.Password = "secret123"
-		  '     End If
-		  '     Dim shortcut As FolderItem = URL   //shortcut is now a shortcut file pointing to:
-		  '     hxxp://bobbytables:secret123@www.example.net/sections.html#Section31
-		  
+		  //This method overloads the assigment operator ("=") so that any instance of the URI class can be converted directly into a
+		  //(probably) cross-platform URL shortcut file in the user's Temp directory
 		  
 		  Dim URL As String = Me
 		  Dim f As FolderItem = SpecialFolder.Temporary.Child("Shortcut to " + FQDN + ".URL")
@@ -108,16 +98,7 @@ Protected Class URI
 
 	#tag Method, Flags = &h0
 		Function Operator_Convert() As String
-		  //This method overloads the assigment operator ("=") so that any instance of the URI class can be converted directly into a string:
-		  '     Dim URL As New URI("hxxp://www.example.net")
-		  '     URL.ServerFile = "/sections.html"
-		  '     URL.Fragment = "Section31"
-		  '     If URL.Username = "" Then
-		  '       URL.Username = "bobbytables"
-		  '       URL.Password = "secret123"
-		  '     End If
-		  '     Dim s As String = URL   //s is now "hxxp://bobbytables:secret123@www.example.net/sections.html#Section31"
-		  
+		  //This method overloads the assigment operator ("=") so that any instance of the URI class can be converted directly into a string
 		  
 		  Dim URL As String
 		  If Protocol = "mailto" Then
@@ -158,15 +139,7 @@ Protected Class URI
 
 	#tag Method, Flags = &h0
 		Sub Operator_Convert(URL As String)
-		  //This method overloads the assigment operator ("=") so that
-		  //any instance of the URI class can be assigned directly to a
-		  //string:
-		  '       Dim URL As New URI("hxxp://bobbytables:secret123@www.example.net")
-		  '       //URL now contains "hxxp://bobbytables:secret123@www.example.net"
-		  '       URL = "hxxp://bobbytables:secret123@www.example.net/sections.html#Section31"
-		  '       //URL now contains "hxxp://bobbytables:secret123@www.example.net/sections.html#Section31"
-		  
-		  //Just parse it
+		  //This method overloads the assigment operator ("=") so that any string value can be assigned directly to an instance of the URI class
 		  Parse(URL)
 		End Sub
 	#tag EndMethod
@@ -174,7 +147,6 @@ Protected Class URI
 	#tag Method, Flags = &h21
 		Private Sub Parse(URL As String)
 		  //The Parse method accepts a string as input and parses that string as a URI into the various class properties.
-		  //Parse is called by the class constructor and by the Operator_Convert(String) method.
 		  
 		  If NthField(URL, ":", 1) <> "mailto" Then
 		    If InStr(URL, "://") > 0 Then
@@ -244,7 +216,7 @@ Protected Class URI
 		  '7 = '@' was not found
 		  
 		  Dim tmp As New URI(URL)
-		  If tmp <> URL Then 
+		  If tmp <> URL Then
 		    ValidationError = 1
 		    Return False
 		  End If
@@ -260,14 +232,14 @@ Protected Class URI
 		    
 		    If Instr(URL, "@") > 0 Then //  USER:PASS@Domain
 		      tmp.Username = NthField(URL, ":", 1)
-		      If tmp.Username.Trim = "" Then 
+		      If tmp.Username.Trim = "" Then
 		        ValidationError = 3
 		        Return False
 		      End If
 		      URL = URL.Replace(tmp.Username + ":", "")
 		      
 		      tmp.Password = NthField(URL, "@", 1)
-		      If tmp.Password.Trim = "" Then 
+		      If tmp.Password.Trim = "" Then
 		        ValidationError = 4
 		        Return False
 		      End If
@@ -278,7 +250,7 @@ Protected Class URI
 		      Dim s As String = NthField(URL, ":", 2)
 		      s = NthField(s, "?", 1)
 		      tmp.Port = Val(s)
-		      If tmp.Port > 65535 Or tmp.Port < 0 Then  
+		      If tmp.Port > 65535 Or tmp.Port < 0 Then
 		        ValidationError = 5
 		        Return False
 		      End If
@@ -317,7 +289,7 @@ Protected Class URI
 		  Else
 		    tmp.Protocol = "mailto"
 		    URL = Replace(URL, "mailto:", "")
-		    If Instr(URL, "@") <= 0 Then 
+		    If Instr(URL, "@") <= 0 Then
 		      ValidationError = 7
 		      Return False
 		    End If
