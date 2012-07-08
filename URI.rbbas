@@ -7,6 +7,20 @@ Protected Class URI
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		 Shared Function Decode(URL As String) As String
+		  //Quick and dirty stand-in for DecodeURLComponent
+		  Dim ret As String = URL
+		  
+		  For i As Integer = 0 To 127
+		    Dim char As String = "%" + Right("00" + Hex(i), 2)
+		    ret = ReplaceAll(ret, char, Chr(i))
+		  Next
+		  
+		  Return ret
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		 Shared Function DefaultPort(ProtocolName As String) As Integer
 		  Select Case ProtocolName
 		  Case "http"
@@ -55,7 +69,29 @@ Protected Class URI
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		 Shared Function Encode(URL As String) As String
+		  //Quick and dirty stand-in for EncodeURLComponent
+		  Dim ret As String = URL
+		  
+		  For i As Integer = 0 To 127  
+		    Dim char As String = "%" + Right("00" + Hex(i), 2)
+		    ret = ReplaceAll(ret, Chr(i), char)
+		    
+		    If i = 34 Then i = 38 
+		    If i = 39 Then i = 126
+		  Next
+		  
+		  
+		  Return ret
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Operator_Compare(CompareTo As URI) As Integer
+		  //This method overloads the comparison operator ("=") so that any instance of the URI class can be compared directly into any
+		  //other instance of the URI class. Case-sensitivity is enforced if either instance of the URI class has its CaseSensitive
+		  //property set to True, otherwise letter case is not considered
+		  
 		  //Return values:
 		  // -1: CompareTo < Me -Or- not equal (if CaseSensitive = False)
 		  //  0: CompareTo = Me
@@ -213,7 +249,7 @@ Protected Class URI
 		  '4 = Password was expected but not found
 		  '5 = Port exceeded the allowed range (0-65535)
 		  '6 = The domain name is incomplete
-		  '7 = '@' was not found
+		  '7 = '@' was not found (mailto: only)
 		  
 		  Dim tmp As New URI(URL)
 		  If tmp <> URL Then

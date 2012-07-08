@@ -7,7 +7,7 @@ Begin Window Window1
    Frame           =   0
    FullScreen      =   False
    HasBackColor    =   False
-   Height          =   239
+   Height          =   2.39e+2
    ImplicitInstance=   True
    LiveResize      =   True
    MacProcID       =   0
@@ -23,7 +23,7 @@ Begin Window Window1
    Resizeable      =   False
    Title           =   "URI Parser Test"
    Visible         =   True
-   Width           =   813
+   Width           =   9.11e+2
    Begin TextField TextField1
       AcceptTabs      =   ""
       Alignment       =   0
@@ -55,7 +55,7 @@ Begin Window Window1
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
-      Text            =   "PROTOCOL://USER:PASS@SUB.DOMAIN.TLD:65535/DIR/SERVERFILE.EXT?arg1=1&arg2=2#Fragment"
+      Text            =   "PROTOCOL://USER:PASS@SUB.DOMAIN.TLD:65535/DIR/SERVER FILE.EXT?arg1=1&arg2=2#Fragment"
       TextColor       =   0
       TextFont        =   "System"
       TextSize        =   0
@@ -112,7 +112,7 @@ Begin Window Window1
       Underline       =   ""
       UseFocusRing    =   True
       Visible         =   True
-      Width           =   813
+      Width           =   911
       _ScrollWidth    =   -1
    End
    Begin PushButton PushButton1
@@ -207,6 +207,68 @@ Begin Window Window1
       Underline       =   ""
       Visible         =   True
       Width           =   42
+   End
+   Begin PushButton PushButton4
+      AutoDeactivate  =   True
+      Bold            =   ""
+      ButtonStyle     =   0
+      Cancel          =   ""
+      Caption         =   "Encode"
+      Default         =   False
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   813
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Scope           =   0
+      TabIndex        =   5
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   0
+      Underline       =   ""
+      Visible         =   True
+      Width           =   49
+   End
+   Begin PushButton PushButton5
+      AutoDeactivate  =   True
+      Bold            =   ""
+      ButtonStyle     =   0
+      Cancel          =   ""
+      Caption         =   "Decode"
+      Default         =   False
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   862
+      LockBottom      =   ""
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   ""
+      LockTop         =   True
+      Scope           =   0
+      TabIndex        =   6
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   0
+      Underline       =   ""
+      Visible         =   True
+      Width           =   49
    End
 End
 #tag EndWindow
@@ -338,6 +400,20 @@ End
 		  Call MsgBox("Parsing the URL: " + Str(averageconvertin) + "μs" + EndOfLine + _
 		  "Validating the URL: " + Str(averagevalidate) + "μs" + EndOfLine + _
 		  "Converting back to a string: " + Str(averageconvertout) + "μs", 0, "Average Completion Times")
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PushButton4
+	#tag Event
+		Sub Action()
+		  TextField1.Text = URI.Encode(TextField1.Text)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PushButton5
+	#tag Event
+		Sub Action()
+		  TextField1.Text = URI.Decode(TextField1.Text)
 		End Sub
 	#tag EndEvent
 #tag EndEvents
