@@ -212,50 +212,6 @@ End
 #tag EndWindow
 
 #tag WindowCode
-	#tag Event
-		Sub Open()
-		  ''Dim URL As New URI("http://www.example.net")
-		  ''If URL.Username = "" Then
-		  ''URL.Username = "bobbytables"
-		  ''URL.Password = "secret123"
-		  ''End If
-		  ''URL.ServerFile = "/sections.html"
-		  ''URL.Fragment = "Section31"
-		  '
-		  '
-		  ''
-		  'For i As Integer = 0 To 999
-		  'Dim URL As New URI("http://bobbytables:secret123@www.example.net")
-		  'Next
-		  
-		  'Dim URL2 As New URI("httP://bobbytables:secret123@www.example.net")
-		  'URL2.CaseSensitive = True
-		  'If URL = URL2 Then
-		  'Break
-		  'Else
-		  'Break
-		  'End If
-		  
-		  ''URL = "http://bobbytables:secret123@www.example.net/sections.html#Section31"
-		  ''Dim s As String = URL
-		  ''//s is now "http://bobbytables:secret123@www.example.net/sections.html#Section31"
-		  ''Break
-		  '
-		  'Dim url As New URI("sftp://crashreports.mycompany.net#newreports")
-		  'url.Username = "bob"
-		  'url.Password = "157458"
-		  'url.ServerFile = "/reports/report34234.rpt"
-		  'url.Fragment = "oldreports"
-		  'url.Arguments = Split("date=635481654&hostid=123456789", "&")
-		  'url.Fragment = "oldreports"
-		  'url.FQDN = "arch.mycompany.net"
-		  'url.Port = 8080
-		  'Dim s As String = URL
-		  'Break
-		End Sub
-	#tag EndEvent
-
-
 #tag EndWindowCode
 
 #tag Events Listbox1
@@ -272,6 +228,8 @@ End
 	#tag EndEvent
 	#tag Event
 		Function CellClick(row as Integer, column as Integer, x as Integer, y as Integer) As Boolean
+		  #pragma Unused x
+		  #pragma Unused y
 		  If column = 1 And row = Me.ListCount - 1 Then
 		    ShowURL(Me.Cell(row, column))
 		    Return True
