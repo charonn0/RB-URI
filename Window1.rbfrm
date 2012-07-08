@@ -7,7 +7,7 @@ Begin Window Window1
    Frame           =   0
    FullScreen      =   False
    HasBackColor    =   False
-   Height          =   2.39e+2
+   Height          =   2.59e+2
    ImplicitInstance=   True
    LiveResize      =   True
    MacProcID       =   0
@@ -20,7 +20,7 @@ Begin Window Window1
    MinimizeButton  =   True
    MinWidth        =   64
    Placement       =   2
-   Resizeable      =   False
+   Resizeable      =   True
    Title           =   "URI Parser Test"
    Visible         =   True
    Width           =   9.11e+2
@@ -46,7 +46,7 @@ Begin Window Window1
       LockBottom      =   ""
       LockedInPosition=   False
       LockLeft        =   True
-      LockRight       =   ""
+      LockRight       =   True
       LockTop         =   True
       Mask            =   ""
       Password        =   ""
@@ -64,7 +64,7 @@ Begin Window Window1
       Underline       =   ""
       UseFocusRing    =   True
       Visible         =   True
-      Width           =   665
+      Width           =   552
    End
    Begin Listbox Listbox1
       AutoDeactivate  =   True
@@ -84,7 +84,7 @@ Begin Window Window1
       GridLinesVertical=   0
       HasHeading      =   True
       HeadingIndex    =   -1
-      Height          =   212
+      Height          =   232
       HelpTag         =   ""
       Hierarchical    =   ""
       Index           =   -2147483648
@@ -92,10 +92,10 @@ Begin Window Window1
       InitialValue    =   "URI Part	Value"
       Italic          =   ""
       Left            =   0
-      LockBottom      =   ""
+      LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
-      LockRight       =   ""
+      LockRight       =   True
       LockTop         =   True
       RequiresSelection=   ""
       Scope           =   0
@@ -128,23 +128,23 @@ Begin Window Window1
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   714
+      Left            =   634
       LockBottom      =   ""
       LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   ""
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       Scope           =   0
       TabIndex        =   2
       TabPanelIndex   =   0
       TabStop         =   True
       TextFont        =   "System"
-      TextSize        =   0
+      TextSize        =   12
       TextUnit        =   0
-      Top             =   0
+      Top             =   1
       Underline       =   ""
       Visible         =   True
-      Width           =   57
+      Width           =   65
    End
    Begin PushButton PushButton2
       AutoDeactivate  =   True
@@ -159,23 +159,23 @@ Begin Window Window1
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   666
+      Left            =   564
       LockBottom      =   ""
       LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   ""
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       Scope           =   0
       TabIndex        =   1
       TabPanelIndex   =   0
       TabStop         =   True
       TextFont        =   "System"
-      TextSize        =   0
+      TextSize        =   12
       TextUnit        =   0
-      Top             =   0
+      Top             =   1
       Underline       =   ""
       Visible         =   True
-      Width           =   48
+      Width           =   65
    End
    Begin PushButton PushButton3
       AutoDeactivate  =   True
@@ -190,23 +190,23 @@ Begin Window Window1
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   771
+      Left            =   704
       LockBottom      =   ""
       LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   ""
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       Scope           =   0
       TabIndex        =   3
       TabPanelIndex   =   0
       TabStop         =   True
       TextFont        =   "System"
-      TextSize        =   0
+      TextSize        =   12
       TextUnit        =   0
-      Top             =   0
+      Top             =   1
       Underline       =   ""
       Visible         =   True
-      Width           =   42
+      Width           =   65
    End
    Begin PushButton PushButton4
       AutoDeactivate  =   True
@@ -221,23 +221,23 @@ Begin Window Window1
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   813
+      Left            =   774
       LockBottom      =   ""
       LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   ""
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       Scope           =   0
       TabIndex        =   5
       TabPanelIndex   =   0
       TabStop         =   True
       TextFont        =   "System"
-      TextSize        =   0
+      TextSize        =   12
       TextUnit        =   0
-      Top             =   0
+      Top             =   1
       Underline       =   ""
       Visible         =   True
-      Width           =   49
+      Width           =   65
    End
    Begin PushButton PushButton5
       AutoDeactivate  =   True
@@ -252,23 +252,23 @@ Begin Window Window1
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   ""
-      Left            =   862
+      Left            =   844
       LockBottom      =   ""
       LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   ""
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       Scope           =   0
       TabIndex        =   6
       TabPanelIndex   =   0
       TabStop         =   True
       TextFont        =   "System"
-      TextSize        =   0
+      TextSize        =   12
       TextUnit        =   0
-      Top             =   0
+      Top             =   1
       Underline       =   ""
       Visible         =   True
-      Width           =   49
+      Width           =   65
    End
 End
 #tag EndWindow
