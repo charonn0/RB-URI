@@ -365,7 +365,7 @@ End
 		  Dim url As New URI("random://stuff.here:123/that/validates?a=b&c=d#42")
 		  Dim atotals(), btotals(), ctotals() As UInt64
 		  
-		  For i As Integer = 0 To 99
+		  For i As Integer = 0 To 999
 		    Dim starting, ending As UInt64
 		    Dim b As Boolean
 		    Dim urlstring As String = TextField1.Text

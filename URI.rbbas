@@ -11,7 +11,7 @@ Protected Class URI
 		  //Quick and dirty stand-in for DecodeURLComponent
 		  Dim ret As String = URL
 		  
-		  For i As Integer = 0 To 127
+		  For i As Integer = 0 To 255
 		    Dim char As String = "%" + Right("00" + Hex(i), 2)
 		    ret = ReplaceAll(ret, char, Chr(i))
 		  Next
@@ -73,11 +73,11 @@ Protected Class URI
 		  //Quick and dirty stand-in for EncodeURLComponent
 		  Dim ret As String = URL
 		  
-		  For i As Integer = 0 To 127  
+		  For i As Integer = 0 To 127
 		    Dim char As String = "%" + Right("00" + Hex(i), 2)
 		    ret = ReplaceAll(ret, Chr(i), char)
 		    
-		    If i = 34 Then i = 38 
+		    If i = 34 Then i = 38
 		    If i = 39 Then i = 126
 		  Next
 		  
@@ -155,7 +155,7 @@ Protected Class URI
 		    URL = URL + ":" + Format(Port, "#####")
 		  End If
 		  
-		  If Join(ServerFile, "/") <> "" Then
+		  If Join(ServerFile, "/") <> "/" Then
 		    URL = URL + Join(ServerFile, "/")
 		  Else
 		    If Protocol <> "mailto" Then URL = URL + "/"
@@ -261,6 +261,10 @@ Protected Class URI
 		    If InStr(URL, "://") > 0 Then
 		      tmp.Protocol = NthField(URL, "://", 1)
 		      URL = URL.Replace(tmp.Protocol + "://", "")
+		      If tmp.Protocol.Trim = "" Then
+		        ValidationError = 2
+		        Return False
+		      End If
 		    Else
 		      ValidationError = 2
 		      Return False
@@ -387,7 +391,7 @@ Protected Class URI
 		The URI class can convert itself into a string and also can convert a string into itself. URIs are therefore easily
 		passed back and forth between being a string and being an instance of the URI class. Instances of the URI class can
 		also be directly compared to one another. When compared, they will be considered equal if converting both into a string
-		produces identical strings. Set the CaseSensitive property to True to make the comparisons sensitive to encoding.
+		produces identical strings. Set the CaseSensitive property to True to make the comparisons sensitive to letter casing.
 		
 		     Dim URL As New URI("") //Create an empty URI
 		     Dim URL2 As New URI("Http://bobbytables:secret123@www.example.net")
