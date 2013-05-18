@@ -73,11 +73,11 @@ Protected Class URI
 		  //Quick and dirty stand-in for EncodeURLComponent
 		  Dim ret As String = URL
 		  
-		  For i As Integer = 0 To 127  
+		  For i As Integer = 0 To 127
 		    Dim char As String = "%" + Right("00" + Hex(i), 2)
 		    ret = ReplaceAll(ret, Chr(i), char)
 		    
-		    If i = 34 Then i = 38 
+		    If i = 34 Then i = 38
 		    If i = 39 Then i = 126
 		  Next
 		  
@@ -96,6 +96,8 @@ Protected Class URI
 		  // -1: CompareTo < Me -Or- not equal (if CaseSensitive = False)
 		  //  0: CompareTo = Me
 		  //  1: CompareTo > Me -Or- not equal (if CaseSensitive = False)
+		  
+		  If CompareTo = Nil Then Return -1
 		  
 		  Dim l, r As String
 		  l = CompareTo
