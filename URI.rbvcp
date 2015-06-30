@@ -1,11 +1,11 @@
 Type=Desktop
-RBProjectVersion=2012.011
+RBProjectVersion=2011.043
 MinIDEVersion=20070100
 Class=App;App.rbbas;&h286C07FF;&h0;false
 Window=Window1;Window1.rbfrm;&h7E4667FF;&h0;false
 MenuBar=MenuBar1;MenuBar1.rbmnu;&h4B4E7FF;&h0;false
 BuildSteps=Build Automation;Build Automation.rbbas;&h6DC47FFF;&h0;false
-Class=URI;URI.rbbas;&h4F4BFFFF;&h0;false
+Class=URI;URI.rbbas;&h419BF7FF;&h0;false
 DefaultWindow=Window1
 AppMenuBar=MenuBar1
 MajorVersion=1
