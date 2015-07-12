@@ -81,12 +81,6 @@ Protected Class URI
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(CopyURI As URI)
-		  Me.Constructor(CopyURI.ToString)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub Operator_Convert(NewValue As String)
 		  Me.Constructor(NewValue)
 		End Sub
