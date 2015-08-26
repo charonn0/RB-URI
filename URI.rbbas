@@ -81,6 +81,18 @@ Protected Class URI
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub Constructor(BaseURL As URI, Relative As String)
+		  Dim u1, u2 As URI
+		  u1 = New URI(BaseURL.ToString)
+		  u2 = New URI(Relative)
+		  u1.Path = u2.Path
+		  u1.Arguments = u2.Arguments
+		  u1.Fragment = u2.Fragment
+		  Me.Constructor(u1.ToString)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub Operator_Convert(NewValue As String)
 		  Me.Constructor(NewValue)
 		End Sub
