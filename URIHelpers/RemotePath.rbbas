@@ -55,17 +55,31 @@ Protected Class RemotePath
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Parent() As URIHelpers.RemotePath
+		  Dim p As New RemotePath(Me.ToString)
+		  If p.NameCount > 1 Then
+		    p.Remove(p.NameCount - 1)
+		    Return p
+		  End If
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub Remove(Index As Integer)
 		  mPath.Remove(Index)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ToString() As String
+		Function ToString(URLEncoded As Boolean = True) As String
 		  Dim s As String
 		  For i As Integer = 0 To UBound(mPath)
 		    If mPath(i).Trim = "" Then Continue
-		    s = s + "/" + EncodeURLComponent(mPath(i))
+		    If URLEncoded Then
+		      s = s + "/" + EncodeURLComponent(mPath(i))
+		    Else
+		      s = s + "/" + mPath(i)
+		    End If
 		  Next
 		  If mHasEndSlash Then s = s + "/"
 		  Return s

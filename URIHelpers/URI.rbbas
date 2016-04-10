@@ -7,9 +7,40 @@ Class URI
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Operator_Compare(OtherURI As URIHelpers.URI) As Integer
+		  If OtherURI Is Nil Then Return 1
+		  
+		  If OtherURI.Scheme <> Me.Scheme Then Return StrComp(OtherURI.Scheme, Me.Scheme, 0)
+		  If OtherURI.Credentials <> Me.Credentials Then
+		    If Me.Credentials <> Nil And OtherURI.Credentials <> Nil Then
+		      Return StrComp(OtherURI.Credentials.ToString, Me.Credentials.ToString, 0)
+		    ElseIf Me.Credentials = Nil Then
+		      Return -1
+		    Else
+		      Return 1
+		    End If
+		  End If
+		  If OtherURI.Host <> Me.Host Then Return StrComp(OtherURI.Host.ToString, Me.Host.ToString, 0)
+		  If OtherURI.Port <> Me.Port And Not (Me.Port < 1 And OtherURI.Port < 1) Then Return Sign(Me.Port - OtherURI.Port)
+		  If OtherURI.Path <> Me.Path Then Return StrComp(OtherURI.Path.ToString, Me.Path.ToString, 0)
+		  If OtherURI.Arguments <> Me.Arguments Then Return StrComp(OtherURI.Arguments.ToString, Me.Arguments.ToString, 0)
+		  If OtherURI.Fragment <> Me.Fragment Then Return StrComp(OtherURI.Fragment, Me.Fragment, 0)
+		  
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Operator_Convert() As String
 		  Dim URL As String
-		  If Scheme <> "" Then URL = EncodeURLComponent(Scheme) + "://"
+		  If Scheme <> "" Then
+		    If Scheme <> "mailto" Then
+		      URL = EncodeURLComponent(Scheme) + "://"
+		    Else
+		      URL = EncodeURLComponent(Scheme) + ":"
+		    End If
+		  End If
 		  
 		  If Username <> "" Then
 		    URL = URL + EncodeURLComponent(Username)
@@ -24,9 +55,9 @@ Class URI
 		    URL = URL + ":" + Format(Port, "####0")
 		  End If
 		  
-		  URL = URL + Me.Path.ToString
+		  If Me.Path <> Nil Then URL = URL + Me.Path.ToString
 		  
-		  If Arguments.Count > 0 Then
+		  If Arguments <> Nil Then
 		    URL = URL + Arguments.ToString
 		  End If
 		  
@@ -90,11 +121,11 @@ Class URI
 		      Dim tmp As String = NthField(URL, "?", 1)
 		      Path = tmp  //    /foo/bar.php
 		      URL = URL.Replace(tmp + "?", "")
-		      Me.Arguments = New URIHelpers.Arguments(URL)
+		      Me.Arguments = URL
 		    Else
 		      Path = URL.Trim
 		      URL = Replace(URL, Me.Path.ToString, "")
-		      Me.Arguments = New URIHelpers.Arguments("")
+		      Me.Arguments = ""
 		    End If
 		    
 		  Else
@@ -105,7 +136,7 @@ Class URI
 		    
 		    If InStr(URL, "?") > 0 Then
 		      Me.Host = NthField(URL, "?", 1)
-		      Me.Arguments = New URIHelpers.Arguments(NthField(URL, "?", 2))
+		      Me.Arguments = NthField(URL, "?", 2)
 		    Else
 		      Me.Host = URL
 		    End If

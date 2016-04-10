@@ -3,21 +3,36 @@ Protected Class App
 Inherits Application
 	#tag Event
 		Sub Open()
-		  Dim url As URIHelpers.URI = "https://user:pass@192.168.1.4:7878/digest-auth/:qop/:test user/:seekrit?arg1=1&arg2=2#frag"
-		  If url.Host.IsLiteral Then Break
-		  'Dim h As New HTTPSecureSocket
-		  'h.Secure = True
-		  'Dim s As String = h.Get(url, 10)
-		  'Do Until h.IsConnected
-		  'DoEvents
-		  'Loop
-		  '
-		  'Do Until Not h.IsConnected
-		  'DoEvents
-		  'Loop
-		  '
-		  'Dim e As InternetHeaders = h.PageHeaders
-		  MsgBox(url)
+		  Dim url1 As URIHelpers.URI = "https://www.google.co.uk:444/search?q=hello, world!"
+		  Dim url2 As URIHelpers.URI = "https://www.google.co.uk:444/search?q=hello, world!"
+		  Dim url3 As URIHelpers.URI = "https://www.google.co.uk:444/search?q=hello, world!"
+		  Dim url4 As URIHelpers.URI = "http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3211]:80"
+		  Dim url5 As URIHelpers.URI = "https://www.google.co.uk:444/search?q=hello, world!/index.html?foo=bar"
+		  Dim url6 As URIHelpers.URI = "https://www.google.co.uk:444/search?q=hello, world!"
+		  
+		  If url1 <> url2 Then
+		    Break ' WRONG
+		  Else
+		    Break ' RIGHT
+		  End If
+		  
+		  If url3 <> url1 Then
+		    Break ' WRONG
+		  Else
+		    Break ' RIGHT
+		  End If
+		  
+		  If url5 = url4 Then
+		    Break ' WRONG
+		  Else
+		    Break ' RIGHT
+		  End If
+		  
+		  If url1 <> url6 Then
+		    Break ' WRONG
+		  Else
+		    Break ' RIGHT
+		  End If
 		  Break
 		End Sub
 	#tag EndEvent

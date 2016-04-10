@@ -1,5 +1,11 @@
 #tag Class
 Protected Class Hostname
+	#tag Method, Flags = &h0
+		Sub AppendSubdomain(SubName As String)
+		  mSubdomains.Append(SubName)
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h1
 		Protected Sub Constructor(Hostname As String)
 		  If Not URIHelpers.IsLiteral(Hostname) Then
@@ -10,6 +16,12 @@ Protected Class Hostname
 		  Else
 		    mSubdomains = Array(Hostname)
 		  End If
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub InsertSubdomain(Index As Integer, SubName As String)
+		  mSubdomains.Insert(Index, SubName)
 		End Sub
 	#tag EndMethod
 
@@ -32,6 +44,12 @@ Protected Class Hostname
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub RemoveSubdomain(Index As Integer)
+		  mSubdomains.Remove(Index)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function SubDomain(Index As Integer) As String
 		  Return mSubdomains(Index)
 		End Function
@@ -50,6 +68,19 @@ Protected Class Hostname
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function TailMatch(OtherHost As URIHelpers.Hostname, BinaryCompare As Boolean = True) As Boolean
+		  Dim count As Integer = Min(OtherHost.SubDomainCount - 1, Me.SubDomainCount - 1)
+		  Dim mode As Integer
+		  If Not BinaryCompare Then mode = 1
+		  For i As Integer = 0 To count
+		    If StrComp(OtherHost.SubDomain(i), Me.SubDomain(i), mode) <> 0 Then Return False
+		  Next
+		  Return True
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function TLD() As String
 		  Return mSubdomains(0)
 		End Function
@@ -64,9 +95,10 @@ Protected Class Hostname
 	#tag Method, Flags = &h0
 		Function ToString() As String
 		  Dim s As String
-		  Dim c As Integer = SubDomainCount - 1
+		  Dim c As Integer = Me.SubDomainCount - 1
+		  Dim literal As Boolean = Me.IsLiteral
 		  For i As Integer = c DownTo 0
-		    If Not Me.IsLiteral Then
+		    If Not literal Then
 		      If s <> "" Then s = s + "."
 		      s = s + EncodeURLComponent(mSubdomains(i))
 		    ElseIf c = 0 Then' IPv6
@@ -81,6 +113,22 @@ Protected Class Hostname
 		  Return s
 		End Function
 	#tag EndMethod
+
+
+	#tag Note, Name = Subdomain order
+		A internet domain name is read from right to left, with the leftmost name part being the zeroth subdomain and then
+		rightmost part being at SubDomainCount-1
+		
+		For example, the domain name "sub2.sub1.domain.tld" would be represented as:
+		
+		SubDomain(0) = "tld"
+		SubDomain(1) = "domain"
+		SubDomain(2) = "sub1"
+		SubDomain(3) = "sub2"
+		
+		This class can also handle IPv4 and IPv6 address literals. When doing so, the IP literal is stored entirely at SubDomain(0).
+		
+	#tag EndNote
 
 
 	#tag Property, Flags = &h1
