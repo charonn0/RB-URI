@@ -156,12 +156,18 @@ End
 		  If url.Scheme <> "" Then Listbox1.AddRow("Scheme", URL.Scheme)
 		  If url.Username <> "" Then Listbox1.AddRow("Username", URL.Username)
 		  If url.Password <> "" Then Listbox1.AddRow("Password", URL.Password)
-		  If url.Host <> "" Then Listbox1.AddRow("Host", URL.Host)
+		  If url.Host <> Nil Then 
+		    If url.Host.IsLiteral Then
+		      Listbox1.AddRow("IP", URL.Host.ToString)
+		    Else
+		      Listbox1.AddRow("Host", URL.Host.ToString)
+		    End If
+		  End If
 		  If url.Port > 0 Then Listbox1.AddRow("Port", Format(URL.Port, "######"))
-		  If url.Path <> "" Then Listbox1.AddRow("Path", url.Path)
-		  If UBound(url.Arguments) > -1 Then Listbox1.AddRow("Arguments", Join(URL.Arguments, "&"))
+		  If url.Path <> Nil Then Listbox1.AddRow("Path", url.Path.ToString(False))
+		  If url.Arguments <> Nil Then Listbox1.AddRow("Arguments", URL.Arguments.ToString)
 		  If url.Fragment <> "" Then Listbox1.AddRow("Fragment", URL.Fragment)
-		  Listbox1.AddRow("Convert Back", URL.ToString)
+		  Listbox1.AddRow("Convert Back", URL)
 		End Sub
 	#tag EndMethod
 
