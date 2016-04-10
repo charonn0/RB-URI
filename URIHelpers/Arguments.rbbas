@@ -53,6 +53,13 @@ Protected Class Arguments
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub Operator_Redim(NewSize As Integer)
+		  If NewSize > mArgs.Ubound Then Raise New OutOfBoundsException
+		  ReDim mArgs(NewSize)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Operator_Subscript(Index As Integer) As Pair
 		  Return mArgs(Index)
 		End Function
