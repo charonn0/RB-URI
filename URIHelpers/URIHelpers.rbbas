@@ -23,12 +23,14 @@ Protected Module URIHelpers
 
 	#tag Method, Flags = &h1
 		Protected Function IsLiteral(Hostname As String) As Boolean
+		  ' Returns True if the Hostname string is (probably) a legal IPv4 or IPv6 address literal
 		  Return IsLiteralV4(Hostname) Or IsLiteralV6(Hostname)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
 		Protected Function IsLiteralV4(Hostname As String) As Boolean
+		  ' Returns True if the Hostname string is (probably) a legal IPv4 address literal
 		  Dim s() As String = Split(Hostname, ".")
 		  Return _
 		  UBound(s) = 3 And _
@@ -41,6 +43,7 @@ Protected Module URIHelpers
 
 	#tag Method, Flags = &h1
 		Protected Function IsLiteralV6(Hostname As String) As Boolean
+		  ' Returns True if the Hostname string is (probably) a legal IPv6 address literal
 		  Return Left(Hostname, 1) = "[" And Right(Hostname, 1) = "]"
 		End Function
 	#tag EndMethod
