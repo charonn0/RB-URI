@@ -27,7 +27,7 @@ Protected Class Hostname
 
 	#tag Method, Flags = &h0
 		Function IsLiteral() As Boolean
-		  Return URIHelpers.IsLiteral(Join(mSubdomains, ""))
+		  Return UBound(mSubdomains) = 0 And URIHelpers.IsLiteral(mSubdomains(0))
 		End Function
 	#tag EndMethod
 
@@ -127,7 +127,6 @@ Protected Class Hostname
 		SubDomain(3) = "sub2"
 		
 		This class can also handle IPv4 and IPv6 address literals. When doing so, the IP literal is stored entirely at SubDomain(0).
-		
 	#tag EndNote
 
 
