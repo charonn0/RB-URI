@@ -3,7 +3,7 @@ Protected Class App
 Inherits Application
 	#tag Event
 		Sub Open()
-		  If Not URIHelpers.SanityTests() Then Break
+		  If Not URIHelpers.SanityTests() Then MsgBox("Sanity check failed.")
 		End Sub
 	#tag EndEvent
 

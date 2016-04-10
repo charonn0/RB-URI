@@ -11,6 +11,7 @@ Class=Arguments;URIHelpers/Arguments.rbbas;&h47FC4FFF;&h282DEFFF;false
 Class=Hostname;URIHelpers/Hostname.rbbas;&h4B2C77FF;&h282DEFFF;false
 Class=RemotePath;URIHelpers/RemotePath.rbbas;&h407167FF;&h282DEFFF;false
 Class=Credentials;URIHelpers/Credentials.rbbas;&h7EB14FFF;&h282DEFFF;false
+Module=Tests;URIHelpers/Tests.rbbas;&h789C27FF;&h282DEFFF;false
 DefaultWindow=Window1
 AppMenuBar=MenuBar1
 MajorVersion=1

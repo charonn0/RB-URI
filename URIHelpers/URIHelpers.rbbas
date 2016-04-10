@@ -60,31 +60,29 @@ Protected Module URIHelpers
 		  If url1 <> url2 Then
 		    Break ' WRONG
 		    Return False
-		  Else
-		    Break ' RIGHT
 		  End If
 		  
 		  If url3 <> url1 Then
 		    Break ' WRONG
 		    Return False
-		  Else
-		    Break ' RIGHT
 		  End If
 		  
 		  If url5 = url4 Then
 		    Break ' WRONG
 		    Return False
-		  Else
-		    Break ' RIGHT
 		  End If
 		  
 		  If url1 <> url6 Then
 		    Break ' WRONG
 		    Return False
-		  Else
-		    Break ' RIGHT
 		  End If
-		  Return True
+		  
+		  Dim failures() As String = URIHelpers.Tests.RunTests()
+		  Dim fc As Integer = UBound(failures)
+		  For i As Integer = 0 To fc
+		    System.DebugLog(failures(i))
+		  Next
+		  Return fc = -1
 		End Function
 	#tag EndMethod
 
