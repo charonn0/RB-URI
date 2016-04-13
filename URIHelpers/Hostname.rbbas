@@ -75,7 +75,7 @@ Protected Class Hostname
 		  For i As Integer = 0 To count
 		    If StrComp(OtherHost.SubDomain(i), Me.SubDomain(i), mode) <> 0 Then Return False
 		  Next
-		  Return True
+		  Return count > -1
 		  
 		End Function
 	#tag EndMethod
