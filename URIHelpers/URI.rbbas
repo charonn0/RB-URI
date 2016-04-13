@@ -1,12 +1,6 @@
 #tag Class
 Class URI
 	#tag Method, Flags = &h0
-		Function Credentials() As URIHelpers.Credentials
-		  Return mCredentials
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function Operator_Compare(OtherURI As URIHelpers.URI) As Integer
 		  If OtherURI Is Nil Then Return 1
 		  
@@ -149,6 +143,16 @@ Class URI
 		Arguments As URIHelpers.Arguments
 	#tag EndProperty
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  If mCredentials = Nil Then mCredentials = ""
+			  Return mCredentials
+			End Get
+		#tag EndGetter
+		Credentials As URIHelpers.Credentials
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h0
 		Fragment As String
 	#tag EndProperty
@@ -157,21 +161,19 @@ Class URI
 		Host As URIHelpers.Hostname
 	#tag EndProperty
 
-	#tag Property, Flags = &h1
-		Protected mCredentials As URIHelpers.Credentials
+	#tag Property, Flags = &h21
+		Private mCredentials As URIHelpers.Credentials
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  If mCredentials = Nil Then mCredentials = New URIHelpers.Credentials
-			  return mCredentials.Password
+			  return Credentials.Password
 			End Get
 		#tag EndGetter
 		#tag Setter
 			Set
-			  If mCredentials = Nil Then mCredentials = New URIHelpers.Credentials
-			  mCredentials.Password = value
+			  Credentials.Password = value
 			End Set
 		#tag EndSetter
 		Password As String
@@ -192,14 +194,12 @@ Class URI
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  If mCredentials = Nil Then mCredentials = New URIHelpers.Credentials
-			  return mCredentials.Username
+			  return Credentials.Username
 			End Get
 		#tag EndGetter
 		#tag Setter
 			Set
-			  If mCredentials = Nil Then mCredentials = New URIHelpers.Credentials
-			  mCredentials.Username = value
+			  Credentials.Username = value
 			End Set
 		#tag EndSetter
 		Username As String
