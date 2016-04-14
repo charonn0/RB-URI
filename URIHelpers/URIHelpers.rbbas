@@ -135,6 +135,44 @@ Protected Module URIHelpers
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h1
+		Protected Function URLDecode(Data As MemoryBlock) As String
+		  Dim bs As New BinaryStream(Data)
+		  Dim decoded As New MemoryBlock(0)
+		  Dim dcbs As New BinaryStream(decoded)
+		  Do Until bs.EOF
+		    Dim char As String = bs.Read(1)
+		    If AscB(char) = 37 Then ' %
+		      dcbs.Write(ChrB(Val("&h" + bs.Read(2))))
+		    Else
+		      dcbs.Write(char)
+		    End If
+		  Loop
+		  dcbs.Close
+		  Return DefineEncoding(decoded, Encodings.UTF8)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function URLEncode(Data As MemoryBlock) As String
+		  Dim bs As New BinaryStream(Data)
+		  Dim encoded As New MemoryBlock(0)
+		  Dim enbs As New BinaryStream(encoded)
+		  
+		  Do Until bs.EOF
+		    Dim char As Byte = bs.ReadByte
+		    Select Case char
+		    Case &h30 To &h39, &h41 To &h5A, &h61 To &h7A, &h2D, &h2E, &h5F
+		      enbs.WriteByte(char)
+		    Else
+		      enbs.Write("%" + Right("0" + Hex(char), 2))
+		    End Select
+		  Loop
+		  enbs.Close
+		  Return DefineEncoding(encoded, Encodings.ASCII)
+		End Function
+	#tag EndMethod
+
 
 	#tag ViewBehavior
 		#tag ViewProperty
