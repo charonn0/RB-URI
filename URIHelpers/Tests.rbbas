@@ -93,11 +93,19 @@ Private Module Tests
 		  Assert(url.Port = 8080, "Hostname port does not match sample")
 		  Assert(Not url.Host.IsLiteral, "Hostname registers as literal")
 		  Assert(url.Host = "sub3.sub2.sub1.domain.tld", "Hostname does not convert back to sample")
+		  
+		  
 		  Assert(url.Host.TailMatch("domain.tld"), "Hostname does not tail match the sample")
+		  Assert(url.Host.TailMatch("sub1.domain.tld"), "Hostname does not tail match the sample")
+		  Assert(url.Host.TailMatch("sub2.sub1.domain.tld"), "Hostname does not tail match the sample")
+		  Assert(url.Host.TailMatch("sub3.sub2.sub1.domain.tld"), "Hostname does not tail match the sample")
+		  Assert(Not url.Host.TailMatch("sub3.sub2.subA.domain.tld"), "Hostname does not tail match the sample")
+		  
 		  
 		  url.Host.InsertSubdomain(2, "sub0")
 		  Assert(url.Host.TailMatch("domain.tld"), "Hostname does not tail match the modified sample")
 		  Assert(url.Host.SubDomain(2) = "sub0", "Hostname subdomain does not match modified sample")
+		  
 		End Sub
 	#tag EndMethod
 
