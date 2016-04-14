@@ -196,6 +196,11 @@ End
 		  Parse(Me.Text)
 		End Sub
 	#tag EndEvent
+	#tag Event
+		Sub Open()
+		  Parse(Me.Text)
+		End Sub
+	#tag EndEvent
 #tag EndEvents
 #tag Events Listbox1
 	#tag Event
