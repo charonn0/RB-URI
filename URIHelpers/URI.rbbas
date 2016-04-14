@@ -30,16 +30,16 @@ Class URI
 		  Dim URL As String
 		  If Scheme <> "" Then
 		    If Scheme <> "mailto" Then
-		      URL = EncodeURLComponent(Scheme) + "://"
+		      URL = URLEncode(Scheme) + "://"
 		    Else
-		      URL = EncodeURLComponent(Scheme) + ":"
+		      URL = URLEncode(Scheme) + ":"
 		    End If
 		  End If
 		  
 		  If Username <> "" Then
-		    URL = URL + EncodeURLComponent(Username)
+		    URL = URL + URLEncode(Username)
 		    If Scheme <> "mailto" Then URL = URL + ":"
-		    If Password <> "" Then URL = URL + EncodeURLComponent(Password)
+		    If Password <> "" Then URL = URL + URLEncode(Password)
 		    URL = URL + "@"
 		  End If
 		  
@@ -56,7 +56,7 @@ Class URI
 		  End If
 		  
 		  If Fragment <> "" Then
-		    URL = URL + "#" + EncodeURLComponent(Fragment)
+		    URL = URL + "#" + URLEncode(Fragment)
 		  End If
 		  If URL.Trim = "" Then URL = "/"
 		  Return URL

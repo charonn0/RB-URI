@@ -17,8 +17,8 @@ Protected Class Credentials
 
 	#tag Method, Flags = &h0
 		Sub Operator_Convert(FromString As String)
-		  Username = DecodeURLComponent(NthField(FromString, ":", 1))
-		  Password = DecodeURLComponent(NthField(FromString, ":", 2))
+		  Username = URLDecode(NthField(FromString, ":", 1))
+		  Password = URLDecode(NthField(FromString, ":", 2))
 		End Sub
 	#tag EndMethod
 

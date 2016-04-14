@@ -2,7 +2,7 @@
 Protected Class Arguments
 	#tag Method, Flags = &h0
 		Sub Append(Name As String, Value As String)
-		  mArgs.Append(DecodeURLComponent(Name):DecodeURLComponent(Value))
+		  mArgs.Append(URLDecode(Name):URLDecode(Value))
 		End Sub
 	#tag EndMethod
 
@@ -23,7 +23,7 @@ Protected Class Arguments
 
 	#tag Method, Flags = &h0
 		Sub Insert(Index As Integer, Name As String, Value As String)
-		  mArgs.Insert(Index, DecodeURLComponent(Name):DecodeURLComponent(Value))
+		  mArgs.Insert(Index, URLDecode(Name):URLDecode(Value))
 		End Sub
 	#tag EndMethod
 
@@ -35,7 +35,7 @@ Protected Class Arguments
 
 	#tag Method, Flags = &h0
 		Sub Name(Index As Integer, Assigns NewName As String)
-		  mArgs(Index) = DecodeURLComponent(NewName):mArgs(Index).Right
+		  mArgs(Index) = URLDecode(NewName):mArgs(Index).Right
 		End Sub
 	#tag EndMethod
 
@@ -47,7 +47,7 @@ Protected Class Arguments
 		    l = NthField(a(i), "=", 1)
 		    r = Right(a(i), a(i).Len - (l.Len + 1)).Trim
 		    l = l.Trim
-		    mArgs.Append(DecodeURLComponent(l):DecodeURLComponent(r))
+		    mArgs.Append(URLDecode(l):URLDecode(r))
 		  Next
 		End Sub
 	#tag EndMethod
@@ -84,8 +84,8 @@ Protected Class Arguments
 		    Dim acount As Integer = Me.Count
 		    For i As Integer = 0 To acount - 1
 		      If i > 0 Then args = args + "&"
-		      args = args + EncodeURLComponent(Me.Name(i))
-		      If Me.Value(i) <> "" Then args = args + "=" + EncodeURLComponent(Me.Value(i))
+		      args = args + URLEncode(Me.Name(i))
+		      If Me.Value(i) <> "" Then args = args + "=" + URLEncode(Me.Value(i))
 		    Next
 		    Return args
 		  End If
@@ -100,7 +100,7 @@ Protected Class Arguments
 
 	#tag Method, Flags = &h0
 		Sub Value(Index As Integer, Assigns NewValue As String)
-		  mArgs(Index) = mArgs(Index).Left:DecodeURLComponent(NewValue)
+		  mArgs(Index) = mArgs(Index).Left:URLDecode(NewValue)
 		End Sub
 	#tag EndMethod
 

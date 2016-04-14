@@ -11,7 +11,7 @@ Protected Class Hostname
 		  If Not URIHelpers.IsLiteral(Hostname) Then
 		    Dim s() As String = Split(Hostname, ".")
 		    For i As Integer = 0 To UBound(s)
-		      mSubdomains.Insert(0, DecodeURLComponent(s(i)))
+		      mSubdomains.Insert(0, URLDecode(s(i)))
 		    Next
 		  Else
 		    mSubdomains = Array(Hostname)
@@ -57,7 +57,7 @@ Protected Class Hostname
 
 	#tag Method, Flags = &h0
 		Sub SubDomain(Index As Integer, Assigns NewSubDomain As String)
-		  mSubdomains(Index) = DecodeURLComponent(NewSubDomain)
+		  mSubdomains(Index) = URLDecode(NewSubDomain)
 		End Sub
 	#tag EndMethod
 
@@ -88,7 +88,7 @@ Protected Class Hostname
 
 	#tag Method, Flags = &h0
 		Sub TLD(Assigns NewTLD As String)
-		  mSubdomains(0) = DecodeURLComponent(NewTLD)
+		  mSubdomains(0) = URLDecode(NewTLD)
 		End Sub
 	#tag EndMethod
 
@@ -100,7 +100,7 @@ Protected Class Hostname
 		  For i As Integer = c DownTo 0
 		    If Not literal Then
 		      If s <> "" Then s = s + "."
-		      s = s + EncodeURLComponent(mSubdomains(i))
+		      s = s + URLEncode(mSubdomains(i))
 		    ElseIf c = 0 Then' IPv6
 		      s = mSubdomains(0)
 		      Exit For

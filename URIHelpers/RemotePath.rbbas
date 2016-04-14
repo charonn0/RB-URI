@@ -9,14 +9,14 @@ Protected Class RemotePath
 		  Else
 		    mHasEndSlash = False
 		  End If
-		  If Name <> "" Then mPath.Append(DecodeURLComponent(Name))
+		  If Name <> "" Then mPath.Append(URLDecode(Name))
 		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
 		Protected Sub Constructor(FilePath As String)
-		  Dim s() As String = Split(DecodeURLComponent(FilePath), "/")
+		  Dim s() As String = Split(URLDecode(FilePath), "/")
 		  For i As Integer = 0 To UBound(s)
 		    If s(i).Trim <> "" Then mPath.Append(s(i))
 		  Next
@@ -26,7 +26,7 @@ Protected Class RemotePath
 
 	#tag Method, Flags = &h0
 		Sub Insert(Index As Integer, Name As String)
-		  mPath.Insert(Index, DecodeURLComponent(Name))
+		  mPath.Insert(Index, URLDecode(Name))
 		End Sub
 	#tag EndMethod
 
@@ -38,7 +38,7 @@ Protected Class RemotePath
 
 	#tag Method, Flags = &h0
 		Sub Name(Index As Integer, Assigns NewName As String)
-		  mPath(Index) = DecodeURLComponent(NewName)
+		  mPath(Index) = URLDecode(NewName)
 		End Sub
 	#tag EndMethod
 
@@ -76,7 +76,7 @@ Protected Class RemotePath
 		  For i As Integer = 0 To UBound(mPath)
 		    If mPath(i).Trim = "" Then Continue
 		    If URLEncoded Then
-		      s = s + "/" + EncodeURLComponent(mPath(i))
+		      s = s + "/" + URLEncode(mPath(i))
 		    Else
 		      s = s + "/" + mPath(i)
 		    End If
