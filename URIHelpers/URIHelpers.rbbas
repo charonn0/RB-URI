@@ -22,6 +22,17 @@ Protected Module URIHelpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
+		Protected Function IsLegalURL(URL As String) As Boolean
+		  Dim u As URI = URL
+		  If u.Scheme <> "file" And u.Host = "" Then Return False
+		  If u.Port > 65536 Or u.Port < -1 Then Return False
+		  If IsNumeric(u.Scheme.Left(1)) Then Return False
+		  If u <> URL Then Return False
+		  Return True
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Function IsLiteral(Hostname As String) As Boolean
 		  ' Returns True if the Hostname string is (probably) a legal IPv4 or IPv6 address literal
 		  Return IsLiteralV4(Hostname) Or IsLiteralV6(Hostname)
