@@ -30,7 +30,7 @@ Protected Module URIHelpers
 
 	#tag Method, Flags = &h1
 		Protected Function IsLiteralV4(Hostname As String) As Boolean
-		  ' Returns True if the Hostname string is (probably) a legal IPv4 address literal
+		  ' Returns True if the Hostname string is a legal IPv4 address literal
 		  Dim s() As String = Split(Hostname, ".")
 		  Return _
 		  UBound(s) = 3 And _
@@ -44,7 +44,30 @@ Protected Module URIHelpers
 	#tag Method, Flags = &h1
 		Protected Function IsLiteralV6(Hostname As String) As Boolean
 		  ' Returns True if the Hostname string is (probably) a legal IPv6 address literal
-		  Return Left(Hostname, 1) = "[" And Right(Hostname, 1) = "]"
+		  
+		  If Left(Hostname, 1) <> "[" Or Right(Hostname, 1) <> "]" Then Return False
+		  If Mid(Hostname, 2, 2) = "::" Then
+		    Dim tmp As String = NthField(Hostname, ":", CountFields(Hostname, ":"))
+		    If IsLiteralV4(Left(tmp, tmp.Len - 1)) Then Return True ' embedded IPv4 address.
+		  End If
+		  
+		  Static valid() As String = Split("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", "")
+		  Dim lastchar As String
+		  Dim squished As Boolean
+		  For i As Integer = 2 To Hostname.Len - 1
+		    Dim char As String = Mid(Hostname, i, 1)
+		    Select Case True
+		    Case char = ":"
+		      If char = lastchar Then
+		        If squished Then Return False ' more than one "::" present
+		        squished = True
+		      End If
+		    Case valid.IndexOf(char) = -1
+		      Return False
+		    End Select
+		    lastchar = char
+		  Next
+		  Return True
 		End Function
 	#tag EndMethod
 
