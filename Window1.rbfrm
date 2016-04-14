@@ -7,7 +7,7 @@ Begin Window Window1
    Frame           =   0
    FullScreen      =   False
    HasBackColor    =   False
-   Height          =   2.59e+2
+   Height          =   259
    ImplicitInstance=   True
    LiveResize      =   True
    MacProcID       =   0
@@ -23,7 +23,7 @@ Begin Window Window1
    Resizeable      =   True
    Title           =   "URI Parser Test"
    Visible         =   True
-   Width           =   6.13e+2
+   Width           =   613
    Begin TextField TextField1
       AcceptTabs      =   ""
       Alignment       =   0
@@ -64,7 +64,7 @@ Begin Window Window1
       Underline       =   ""
       UseFocusRing    =   True
       Visible         =   True
-      Width           =   528
+      Width           =   613
    End
    Begin Listbox Listbox1
       AutoDeactivate  =   True
@@ -80,13 +80,13 @@ Begin Window Window1
       Enabled         =   True
       EnableDrag      =   ""
       EnableDragReorder=   ""
-      GridLinesHorizontal=   2
+      GridLinesHorizontal=   1
       GridLinesVertical=   0
       HasHeading      =   True
       HeadingIndex    =   -1
-      Height          =   232
+      Height          =   233
       HelpTag         =   ""
-      Hierarchical    =   ""
+      Hierarchical    =   True
       Index           =   -2147483648
       InitialParent   =   ""
       InitialValue    =   "URI Part	Value"
@@ -102,49 +102,18 @@ Begin Window Window1
       ScrollbarHorizontal=   ""
       ScrollBarVertical=   True
       SelectionType   =   0
-      TabIndex        =   4
+      TabIndex        =   2
       TabPanelIndex   =   0
       TabStop         =   True
       TextFont        =   "System"
       TextSize        =   0
       TextUnit        =   0
-      Top             =   27
+      Top             =   26
       Underline       =   ""
       UseFocusRing    =   True
       Visible         =   True
       Width           =   613
       _ScrollWidth    =   -1
-   End
-   Begin PushButton PushButton2
-      AutoDeactivate  =   True
-      Bold            =   ""
-      ButtonStyle     =   0
-      Cancel          =   ""
-      Caption         =   "Parse"
-      Default         =   True
-      Enabled         =   True
-      Height          =   22
-      HelpTag         =   ""
-      Index           =   -2147483648
-      InitialParent   =   ""
-      Italic          =   ""
-      Left            =   540
-      LockBottom      =   ""
-      LockedInPosition=   False
-      LockLeft        =   False
-      LockRight       =   True
-      LockTop         =   True
-      Scope           =   0
-      TabIndex        =   1
-      TabPanelIndex   =   0
-      TabStop         =   True
-      TextFont        =   "System"
-      TextSize        =   12
-      TextUnit        =   0
-      Top             =   1
-      Underline       =   ""
-      Visible         =   True
-      Width           =   65
    End
 End
 #tag EndWindow
@@ -153,23 +122,70 @@ End
 	#tag Method, Flags = &h1
 		Protected Sub Parse(URL As URI)
 		  Listbox1.DeleteAllRows
-		  If url.Scheme <> "" Then Listbox1.AddRow("Scheme", URL.Scheme)
-		  If url.Username <> "" Then Listbox1.AddRow("Username", URL.Username)
-		  If url.Password <> "" Then Listbox1.AddRow("Password", URL.Password)
-		  If url.Host <> Nil Then 
-		    If url.Host.IsLiteral Then
-		      Listbox1.AddRow("IP", URL.Host.ToString)
-		    Else
-		      Listbox1.AddRow("Host", URL.Host.ToString)
-		    End If
+		  If URL.Trim = "" Then
+		    mResult = Nil
+		    Return
 		  End If
-		  If url.Port > 0 Then Listbox1.AddRow("Port", Format(URL.Port, "######"))
-		  If url.Path <> Nil Then Listbox1.AddRow("Path", url.Path.ToString(False))
-		  If url.Arguments <> Nil Then Listbox1.AddRow("Arguments", URL.Arguments.ToString)
-		  If url.Fragment <> "" Then Listbox1.AddRow("Fragment", URL.Fragment)
-		  Listbox1.AddRow("Convert Back", URL)
+		  
+		  mResult = URL
+		  If mResult.Scheme <> "" Then
+		    Listbox1.AddRow("Scheme", mResult.Scheme)
+		    Listbox1.CellType(Listbox1.LastIndex, 1) = Listbox.TypeEditable
+		  End If
+		  
+		  If mResult.Username <> "" Then
+		    Listbox1.AddRow("Username", mResult.Username)
+		    Listbox1.CellType(Listbox1.LastIndex, 1) = Listbox.TypeEditable
+		  End If
+		  
+		  If mResult.Password <> "" Then
+		    Listbox1.AddRow("Password", mResult.Password)
+		    Listbox1.CellType(Listbox1.LastIndex, 1) = Listbox.TypeEditable
+		  End If
+		  
+		  If mResult.Host <> Nil Then
+		    If mResult.Host.IsLiteral Then
+		      Listbox1.AddRow("IP", mResult.Host.ToString)
+		    Else
+		      Listbox1.AddRow("Host", mResult.Host.ToString)
+		    End If
+		    Listbox1.CellType(Listbox1.LastIndex, 1) = Listbox.TypeEditable
+		  End If
+		  
+		  If mResult.Port > 0 Then
+		    Listbox1.AddRow("Port", Format(mResult.Port, "######"))
+		  ElseIf mResult.Scheme <> "" And URIHelpers.SchemeToPort(mResult.Scheme) > 0 Then
+		    Listbox1.AddRow("Port", Format(URIHelpers.SchemeToPort(mResult.Scheme), "######"))
+		  Else
+		    Listbox1.AddRow("Port", "")
+		  End If
+		  Listbox1.CellType(Listbox1.LastIndex, 1) = Listbox.TypeEditable
+		  
+		  If mResult.Path <> Nil Then
+		    Listbox1.AddRow("Path", mResult.Path.ToString(False))
+		    Listbox1.CellType(Listbox1.LastIndex, 1) = Listbox.TypeEditable
+		  End If
+		  
+		  If mResult.Arguments <> Nil Then
+		    Listbox1.AddFolder("Arguments")
+		    Listbox1.Cell(Listbox1.LastIndex, 1) = mResult.Arguments.ToString
+		    Listbox1.CellType(Listbox1.LastIndex, 1) = Listbox.TypeEditable
+		    Listbox1.RowTag(Listbox1.LastIndex) = mResult.Arguments
+		  End If
+		  
+		  If mResult.Fragment <> "" Then
+		    Listbox1.AddRow("Fragment", mResult.Fragment)
+		    Listbox1.CellType(Listbox1.LastIndex, 1) = Listbox.TypeEditable
+		  End If
+		  
+		  Listbox1.AddRow("Link value", mResult)
 		End Sub
 	#tag EndMethod
+
+
+	#tag Property, Flags = &h1
+		Protected mResult As URIHelpers.URI
+	#tag EndProperty
 
 
 #tag EndWindowCode
@@ -218,11 +234,58 @@ End
 		  
 		End Sub
 	#tag EndEvent
-#tag EndEvents
-#tag Events PushButton2
 	#tag Event
-		Sub Action()
-		  Parse(TextField1.Text)
+		Sub CellAction(row As Integer, column As Integer)
+		  If mResult = Nil Then Return
+		  
+		  If column = 1 Then
+		    Dim u As URI = mResult
+		    Select Case Me.Cell(row, 0)
+		    Case "Scheme"
+		      u.Scheme = Me.Cell(row, column)
+		    Case "Username"
+		      u.Username = Me.Cell(row, column)
+		    Case "Password"
+		      u.Password = Me.Cell(row, column)
+		    Case "IP", "Host"
+		      u.Host = Me.Cell(row, column)
+		    Case "Port"
+		      If Me.Cell(row, column).Trim = "" Then
+		        u.Port = -1
+		      Else
+		        u.Port = Val(Me.Cell(row, column))
+		      End If
+		    Case "Path"
+		      u.Path = Me.Cell(row, column)
+		    Case "Arguments"
+		      Dim args As String = Me.Cell(row, column)
+		      If Left(args, 1) = "?" Then args = Replace(args, "?", "")
+		      u.Arguments = args
+		    Case "Fragment"
+		      u.Fragment = Me.Cell(row, column)
+		    End Select
+		    TextField1.Text = u
+		  End If
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub ExpandRow(row As Integer)
+		  Select Case Me.Cell(row, 0)
+		  Case "Arguments"
+		    Dim a As URIHelpers.Arguments = Me.RowTag(row)
+		    If a = Nil Then Return
+		    Dim c As Integer = a.Count - 1
+		    For i As Integer = c DownTo 0
+		      Dim n, v As String
+		      n = a.Name(i)
+		      v = a.Value(i)
+		      Me.InsertRow(row + 1, n, 1)
+		      Me.CellType(Me.LastIndex, 0) = Listbox.TypeEditable
+		      If v.Trim <> "" Then Me.Cell(Me.LastIndex, 1) = v
+		      Me.CellType(Me.LastIndex, 1) = Listbox.TypeEditable
+		      
+		    Next
+		  End Select
 		End Sub
 	#tag EndEvent
 #tag EndEvents
