@@ -13,6 +13,13 @@ Private Module Tests
 	#tag Method, Flags = &h1
 		Protected Function RunTests() As String()
 		  Dim fail() As String
+		  
+		  Try
+		    TestURLEncoding()
+		  Catch Err
+		    fail.Append(Err.Message)
+		  End Try
+		  
 		  Try
 		    TestArguments()
 		  Catch Err
@@ -132,6 +139,19 @@ Private Module Tests
 		  Assert(url.Host.IsLiteral, "IPv6 does not register as literal")
 		  Assert(url.Host = "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3211]", "IPv6 Hostname does not convert back to sample")
 		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub TestURLEncoding()
+		  Dim valid As String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%601234567890-%3D%7E%21%40%23%24%25%5E%26%2A%28%29_%2B%5C%5D%5B%3B%27%2F.%2C%3C%3E%3F%3A%22%7B%7D%7C%C6%92%E2%80%9E%E2%80%A6%E2%80%A0"
+		  Dim sample As String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+\][;'/.,<>?:""{}|ƒ„…†"
+		  
+		  Assert(URLEncode(sample) = valid, "Percent encoding failed")
+		  Assert(URLDecode(valid) = sample, "Percent decoding failed")
+		  
+		  Assert(URLEncode(sample) = EncodeURLComponent(sample), "Percent encoding does not match REALbasic")
+		  Assert(URLDecode(valid) = DefineEncoding(DecodeURLComponent(valid), Encodings.UTF8), "Percent decoding does not match REALbasic")
 		End Sub
 	#tag EndMethod
 
