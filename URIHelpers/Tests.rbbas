@@ -79,7 +79,7 @@ Private Module Tests
 		  Assert(url.Credentials.Username = "username1", "Username does not match sample")
 		  Assert(url.Credentials.Password = "password2", "Password does not match sample")
 		  Assert(url.Credentials.Basic = "dXNlcm5hbWUxOnBhc3N3b3JkMg==", "Basic authentication does not match sample")
-		  'Assert(url.Credentials.Digest = "dXNlcm5hbWUxOnBhc3N3b3JkMg==", "Digest authentication does not match sample")
+		  'Assert(url.Credentials.Digest("realm1","12345", "GET", url).Trim = "A3EA6912E200E60B9C4CB5CB04EA77DD", "Digest authentication does not match sample")
 		  
 		End Sub
 	#tag EndMethod
