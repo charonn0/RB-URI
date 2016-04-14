@@ -15,6 +15,12 @@ Private Module Tests
 		  Dim fail() As String
 		  
 		  Try
+		    TestGeneral()
+		  Catch Err
+		    fail.Append(Err.Message)
+		  End Try
+		  
+		  Try
 		    TestURLEncoding()
 		  Catch Err
 		    fail.Append(Err.Message)
@@ -87,6 +93,19 @@ Private Module Tests
 		  Assert(url.Credentials.Password = "password2", "Password does not match sample")
 		  Assert(url.Credentials.Basic = "dXNlcm5hbWUxOnBhc3N3b3JkMg==", "Basic authentication does not match sample")
 		  'Assert(url.Credentials.Digest("realm1","12345", "GET", url).Trim = "A3EA6912E200E60B9C4CB5CB04EA77DD", "Digest authentication does not match sample")
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub TestGeneral()
+		  Assert(IsLegalURL("http://www.google.com/"), "Legal URL parsed incorrectly")
+		  Assert(Not IsLegalURL("123://456.789.101112.3:999999/sdfsdf/sdfsdf?234234#sw"), "Illegal URL parsed incorrectly")
+		  Assert(Not IsLegalURL("http://www.google.com:777777/"), "Illegal URL parsed incorrectly")
+		  Assert(Not IsLiteralV4("http://www.google.com/"), "URL parsed incorrectly")
+		  Assert(Not IsLiteralV6("http://www.google.com/"), "URL parsed incorrectly")
+		  Assert(IsLiteralV4("192.168.1.4"), "IPv4 parsed incorrectly")
+		  Assert(IsLiteralV6("[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]"), "IPv6 parsed incorrectly")
 		  
 		End Sub
 	#tag EndMethod
