@@ -15,6 +15,13 @@ Private Module Tests
 		  Dim fail() As String
 		  
 		  Try
+		    TestEmailAddress()
+		  Catch Err
+		    fail.Append(Err.Message)
+		  End Try
+		  
+		  
+		  Try
 		    TestGeneral()
 		  Catch Err
 		    fail.Append(Err.Message)
@@ -93,6 +100,59 @@ Private Module Tests
 		  Assert(url.Credentials.Password = "password2", "Password does not match sample")
 		  Assert(url.Credentials.Basic = "dXNlcm5hbWUxOnBhc3N3b3JkMg==", "Basic authentication does not match sample")
 		  'Assert(url.Credentials.Digest("realm1","12345", "GET", url).Trim = "A3EA6912E200E60B9C4CB5CB04EA77DD", "Digest authentication does not match sample")
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub TestEmailAddress()
+		  Dim e1 As URIHelpers.EMailAddress = "email@example.com"
+		  Assert(e1.Username = "email", "Email username does not match sample")
+		  Assert(e1.Host.ToString = "example.com", "Email host does not match sample")
+		  Assert(e1.IsLegal, "Legal address failed")
+		  
+		  e1 = """very.unusual.@.unusual.com""@strange.example.com"
+		  Assert(e1.Username = """very.unusual.@.unusual.com""", "Email username does not match sample")
+		  Assert(e1.Host.ToString = "strange.example.com", "Email host does not match sample")
+		  Assert(e1.IsLegal, "Legal address failed")
+		  
+		  e1 = """()<>[]:,;@\\\""!#$%&'*+-/=?^_`{}| ~.a""@example.org"
+		  Assert(e1.Username = """()<>[]:,;@\\\""!#$%&'*+-/=?^_`{}| ~.a""", "Email username does not match sample")
+		  Assert(e1.Host.ToString = "example.org", "Email host does not match sample")
+		  Assert(e1.IsLegal, "Legal address failed")
+		  
+		  e1 = """ ""@example.org"
+		  Assert(e1.Username = """ """, "Email username does not match sample")
+		  Assert(e1.Host.ToString = "example.org", "Email host does not match sample")
+		  Assert(e1.IsLegal, "Legal address failed")
+		  
+		  e1 = "user..name@example.org"
+		  Assert(e1.Username = "user..name", "Email username does not match sample")
+		  Assert(e1.Host.ToString = "example.org", "Email host does not match sample")
+		  Assert(e1.IsLegal, "Legal address failed")
+		  
+		  e1 = "#@%^%#$@#$@#.com"
+		  Assert(Not e1.IsLegal, "Illegal address does not fail")
+		  
+		  e1 = "Abc.example.com"
+		  Assert(Not e1.IsLegal, "Illegal address does not fail")
+		  
+		  e1 = "user...name@example.com"
+		  Assert(Not e1.IsLegal, "Illegal address does not fail")
+		  
+		  e1 = "A@b@c@example.com"
+		  Assert(Not e1.IsLegal, "Illegal address does not fail")
+		  
+		  e1 = "a""b(c)d,e:f;g<h>i[j\k]l@example.com"
+		  Assert(Not e1.IsLegal, "Illegal address does not fail")
+		  
+		  e1 = "just""not""right@example.com"
+		  Assert(Not e1.IsLegal, "Illegal address does not fail")
+		  
+		  e1 = "this\ still\""not\\allowed@example.com"
+		  Assert(Not e1.IsLegal, "Illegal address does not fail")
+		  
+		  
 		  
 		End Sub
 	#tag EndMethod
