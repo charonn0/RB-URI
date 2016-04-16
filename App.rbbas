@@ -4,7 +4,10 @@ Inherits Application
 	#tag Event
 		Sub Open()
 		  #If DebugBuild Then
-		    If Not URIHelpers.SanityTests() Then MsgBox("Sanity check failed.")
+		    Dim s() As String = URIHelpers.SanityTests()
+		    If UBound(s) > -1 Then
+		      MsgBox("Sanity check failed with the following message(s):" + EndOfLine + Join(s, EndOfLine))
+		    End If
 		  #endif
 		End Sub
 	#tag EndEvent

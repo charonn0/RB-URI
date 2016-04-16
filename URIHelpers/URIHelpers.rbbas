@@ -83,7 +83,9 @@ Protected Module URIHelpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Function SanityTests() As Boolean
+		Protected Function SanityTests() As String()
+		  Dim failures() As String = URIHelpers.Tests.RunTests()
+		  
 		  Dim url1 As URIHelpers.URI = "https://www.google.co.uk:444/search?q=hello, world!"
 		  Dim url2 As URIHelpers.URI = "https://www.google.co.uk:444/search?q=hello, world!"
 		  Dim url3 As URIHelpers.URI = "https://www.google.co.uk:444/search?q=hello, world!"
@@ -93,30 +95,25 @@ Protected Module URIHelpers
 		  
 		  If url1 <> url2 Then
 		    Break ' WRONG
-		    Return False
+		    failures.Append("URL comparison #1 failed")
 		  End If
 		  
 		  If url3 <> url1 Then
 		    Break ' WRONG
-		    Return False
+		    failures.Append("URL comparison #2 failed")
 		  End If
 		  
 		  If url5 = url4 Then
 		    Break ' WRONG
-		    Return False
+		    failures.Append("URL comparison #3 failed")
 		  End If
 		  
 		  If url1 <> url6 Then
 		    Break ' WRONG
-		    Return False
+		    failures.Append("URL comparison #4 failed")
 		  End If
 		  
-		  Dim failures() As String = URIHelpers.Tests.RunTests()
-		  Dim fc As Integer = UBound(failures)
-		  For i As Integer = 0 To fc
-		    System.DebugLog(failures(i))
-		  Next
-		  Return fc = -1
+		  Return failures
 		End Function
 	#tag EndMethod
 
