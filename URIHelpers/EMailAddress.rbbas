@@ -12,6 +12,7 @@ Protected Class EMailAddress
 		Function IsLegal() As Boolean
 		  If Me.Host = "" Then Return False
 		  If Me.Username = "" Then Return False
+		  If Me.ToString.Len > 254 Then Return False
 		  
 		  Dim tmp As String = Username
 		  Dim bs As New BinaryStream(tmp)
@@ -25,7 +26,7 @@ Protected Class EMailAddress
 		      dotcount = 0
 		    Case 34 ' "
 		      If quote Or dotcount = 1 Or bs.Position = 1 Or bs.Position = bs.Length Then
-		        If lastchar <> 92 Then 
+		        If lastchar <> 92 Then
 		          quote = Not quote
 		        End If
 		      Else
@@ -55,6 +56,10 @@ Protected Class EMailAddress
 
 	#tag Method, Flags = &h0
 		Sub Operator_Convert(Address As String)
+		  If Left(Address, 7) = "mailto:" Then 
+		    Dim u As URI = Address
+		    Address = u.Username + "@" + u.Host.ToString
+		  End If
 		  Me.Constructor(Address)
 		End Sub
 	#tag EndMethod
