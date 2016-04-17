@@ -126,6 +126,11 @@ Private Module Tests
 		  Assert(e1.Host.ToString = "example.org", "Email host does not match sample")
 		  Assert(e1.IsLegal, "Legal address failed")
 		  
+		  e1 = "user.""quoted"".name@example.org"
+		  Assert(e1.Username = "user.""quoted"".name", "Email username does not match sample")
+		  Assert(e1.Host.ToString = "example.org", "Email host does not match sample")
+		  Assert(e1.IsLegal, "Legal address failed")
+		  
 		  e1 = "user..name@example.org"
 		  Assert(e1.Username = "user..name", "Email username does not match sample")
 		  Assert(e1.Host.ToString = "example.org", "Email host does not match sample")
@@ -151,9 +156,6 @@ Private Module Tests
 		  
 		  e1 = "this\ still\""not\\allowed@example.com"
 		  Assert(Not e1.IsLegal, "Illegal address does not fail")
-		  
-		  
-		  
 		End Sub
 	#tag EndMethod
 
