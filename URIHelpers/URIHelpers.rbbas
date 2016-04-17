@@ -83,6 +83,19 @@ Protected Module URIHelpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
+		Protected Function MailTo(Address As String, Subject As String = "", MessageBody As String = "") As URIHelpers.URI
+		  Dim e As EmailAddress = Address
+		  Dim u As URI = ""
+		  u.Scheme = "mailto"
+		  u.Username = e.Username
+		  u.Host = e.Host
+		  If Subject <> "" Then u.Arguments.Append("Subject", Subject)
+		  If MessageBody <> "" Then u.Arguments.Append("body", MessageBody)
+		  Return u
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Function SanityTests() As String()
 		  Dim failures() As String = URIHelpers.Tests.RunTests()
 		  
