@@ -175,6 +175,25 @@ Protected Module URIHelpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
+		Protected Function URLEncodable(Data As String) As Boolean
+		  Dim bs As New BinaryStream(Data)
+		  Dim ret As Boolean
+		  Do Until bs.EOF
+		    Dim char As Byte = bs.ReadByte
+		    Select Case char
+		    Case &h30 To &h39, &h41 To &h5A, &h61 To &h7A, &h2D, &h2E, &h5F
+		      Continue
+		    Else
+		      ret = True
+		      Exit Do
+		    End Select
+		  Loop
+		  bs.Close
+		  Return ret
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Function URLEncode(Data As MemoryBlock) As String
 		  Dim bs As New BinaryStream(Data)
 		  Dim encoded As New MemoryBlock(0)
