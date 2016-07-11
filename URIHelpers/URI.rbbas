@@ -85,6 +85,11 @@ Class URI
 		    If Instr(URL, ":") > 0 And Left(URL, 1) <> "[" Then //  Domain:Port
 		      Dim s As String = NthField(URL, ":", 2)
 		      s = NthField(s, "?", 1)
+		      If InStr(s, "/") > InStr(s, "?") Then
+		        s = NthField(s, "?", 1)
+		      Else
+		        s = NthField(s, "/", 1)
+		      End If
 		      If Val(s) > 0 Then
 		        Me.Port = Val(s)
 		        URL = URL.Replace(":" + Format(Me.Port, "######"), "")
