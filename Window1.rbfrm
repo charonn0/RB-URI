@@ -84,7 +84,7 @@ Begin Window Window1
       GridLinesVertical=   0
       HasHeading      =   True
       HeadingIndex    =   -1
-      Height          =   233
+      Height          =   213
       HelpTag         =   ""
       Hierarchical    =   True
       Index           =   -2147483648
@@ -115,12 +115,46 @@ Begin Window Window1
       Width           =   613
       _ScrollWidth    =   -1
    End
+   Begin Label Status
+      AutoDeactivate  =   True
+      Bold            =   ""
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   ""
+      Left            =   0
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   False
+      Multiline       =   ""
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   3
+      TabPanelIndex   =   0
+      Text            =   "Awaiting input"
+      TextAlign       =   0
+      TextColor       =   &h000000
+      TextFont        =   "System"
+      TextSize        =   0
+      TextUnit        =   0
+      Top             =   239
+      Transparent     =   False
+      Underline       =   ""
+      Visible         =   True
+      Width           =   613
+   End
 End
 #tag EndWindow
 
 #tag WindowCode
 	#tag Method, Flags = &h1
-		Protected Sub Parse(URL As URI)
+		Protected Sub Parse(URL As String)
 		  Listbox1.DeleteAllRows
 		  If URL.Trim = "" Then
 		    mResult = Nil
@@ -179,6 +213,29 @@ End
 		  End If
 		  
 		  Listbox1.AddRow("Link value", mResult)
+		  
+		  Select Case URIHelpers.ValidateURL(URL)
+		  Case 0
+		    Status.Text = "This URI is legally formatted."
+		  Case URIHelpers.PARSE_ERR_MISSING_SCHEME
+		    Status.Text = "This URI does not have a scheme"
+		  Case URIHelpers.PARSE_ERR_MISSING_DOMAIN
+		    Status.Text = "This URI does not have a domain or IP address"
+		  Case URIHelpers.PARSE_ERR_MISSING_PATH
+		    Status.Text = "This URI does not have a path"
+		  Case URIHelpers.PARSE_ERR_INVALID_PORT
+		    Status.Text = "This URI does not have port"
+		  Case URIHelpers.PARSE_ERR_INVALID_SCHEME
+		    Status.Text = "This URI has an invalid scheme"
+		  Case URIHelpers.PARSE_ERR_INVALID_DOMAIN
+		    Status.Text = "This URI has an invalid domain or IP address"
+		  Case URIHelpers.PARSE_ERR_INVALID_USERNAME
+		    Status.Text = "This URI has an invalid username"
+		  Case URIHelpers.PARSE_ERR_INVALID_PASSWORD
+		    Status.Text = "This URI has an invalid password"
+		  Else
+		    Status.Text = "This URI illegally formatted"
+		  End Select
 		End Sub
 	#tag EndMethod
 
