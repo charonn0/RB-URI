@@ -222,12 +222,14 @@ Protected Module URIHelpers
 		    URL = URL.Replace(scheme + "://", "")
 		  End If
 		  
-		  If Instr(URL, "@") > 0 Then //  USER:PASS@Domain
-		    user = NthField(URL, ":", 1)
-		    URL = URL.Replace(user + ":", "")
-		    
-		    pass = NthField(URL, "@", 1)
-		    URL = URL.Replace(pass + "@", "")
+		  Dim auth As Integer = Instr(URL, "/")
+		  Dim authority As String = Left(URL, auth - 1)
+		  If InStr(authority, "@") > 0 Then //  USER:PASS@Domain
+		    Dim userinfo As String = NthField(authority, "@", 1)
+		    authority = authority.Replace(userinfo + "@", "")
+		    user = NthField(userinfo, ":", 1)
+		    pass = NthField(userinfo, ":", 2)
+		    URL = URL.Replace(userinfo + "@", "")
 		  End If
 		  
 		  If Instr(URL, ":") > 0 And Left(URL, 1) <> "[" Then //  Domain:Port

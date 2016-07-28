@@ -74,12 +74,14 @@ Class URI
 		      URL = URL.Replace(Me.Scheme + "://", "")
 		    End If
 		    
-		    If Instr(URL, "@") > 0 Then //  USER:PASS@Domain
-		      Me.Username = NthField(URL, ":", 1)
-		      URL = URL.Replace(Me.Username + ":", "")
-		      
-		      Me.Password = NthField(URL, "@", 1)
-		      URL = URL.Replace(Me.Password + "@", "")
+		    Dim auth As Integer = Instr(URL, "/")
+		    Dim authority As String = Left(URL, auth - 1)
+		    If InStr(authority, "@") > 0 Then //  USER:PASS@Domain
+		      Dim userinfo As String = NthField(authority, "@", 1)
+		      authority = authority.Replace(userinfo + "@", "")
+		      Me.Username = NthField(userinfo, ":", 1)
+		      Me.Password = NthField(userinfo, ":", 2)
+		      URL = URL.Replace(userinfo + "@", "")
 		    End If
 		    
 		    If Instr(URL, ":") > 0 And Left(URL, 1) <> "[" Then //  Domain:Port
