@@ -78,11 +78,11 @@ Private Module Tests
 		  Assert(url.Arguments.Value(1) = "2", "Argument 2 value does not match sample")
 		  
 		  url.Arguments.Append("arg3", "3")
-		  Assert(url.Arguments.Name(2) = "arg3", "Argument 3 value does not match sample")
+		  Assert(url.Arguments.Name(2) = "arg3", "Argument 3 name does not match sample")
 		  Assert(url.Arguments.Value(2) = "3", "Argument 3 value does not match sample")
 		  
 		  url.Arguments.Insert(0, "arg0", "0")
-		  Assert(url.Arguments.Name(0) = "arg0", "Argument 0 value does not match sample")
+		  Assert(url.Arguments.Name(0) = "arg0", "Argument 0 name does not match sample")
 		  Assert(url.Arguments.Value(0) = "0", "Argument 0 value does not match sample")
 		  
 		  url.Arguments.Remove(url.Arguments.Count - 1)
