@@ -117,8 +117,7 @@ Private Module Tests
 		  Assert(e1.IsLegal, "Legal address failed")
 		  
 		  e1 = """()<>[]:,;@\\\""!#$%&'*+-/=?^_`{}| ~.a""@example.org"
-		  Assert(e1.Username = """()<>[]:,;@\\\""!#$%&'*", "Email username does not match sample")
-		  Assert(e1.Tag = "-/=?^_`{}| ~.a""", "Email tag does not match sample")
+		  Assert(e1.Username = """()<>[]:,;@\\\""!#$%&'*+-/=?^_`{}| ~.a""", "Email username does not match sample")
 		  Assert(e1.Host.ToString = "example.org", "Email host does not match sample")
 		  Assert(e1.IsLegal, "Legal address failed")
 		  

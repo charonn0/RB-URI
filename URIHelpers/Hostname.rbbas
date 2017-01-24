@@ -38,22 +38,6 @@ Protected Class Hostname
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Operator_Compare(OtherHost As URIHelpers.Hostname) As Integer
-		  ' Compares Self and OtherHost to determine whether they belong to the same subdomain.
-		  ' For example 'api.example.com' matches 'example.com' and 'api.example.com' but not 'www.example.com'
-		  
-		  If OtherHost Is Nil Then Return 1
-		  Dim count As Integer = Min(Me.SubDomainCount - 1, OtherHost.SubDomainCount - 1)
-		  For i As Integer = 0 To count
-		    Dim r As Integer = StrComp(Me.SubDomain(i), OtherHost.SubDomain(i), 0)
-		    If r <> 0 Then Return r
-		  Next
-		  
-		  Return 0
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub Operator_Convert(NewHost As String)
 		  Me.Constructor(NewHost)
 		End Sub

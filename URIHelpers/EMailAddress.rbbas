@@ -5,12 +5,6 @@ Protected Class EMailAddress
 		  Dim h As String = NthField(Address, "@", CountFields(Address, "@"))
 		  Username = Left(Address, Address.Len - (h.Len + 1))
 		  Host = h
-		  Dim i As Integer = InStr(Username, "+")
-		  If i > 0 Then
-		    Tag = Right(Username, Username.Len - i)
-		    Username = Left(Username, Username.Len - Tag.Len - 1)
-		  End If
-		  
 		End Sub
 	#tag EndMethod
 
@@ -72,11 +66,7 @@ Protected Class EMailAddress
 
 	#tag Method, Flags = &h0
 		Function ToString() As String
-		  If Tag.Trim = "" Then
-		    Return Username + "@" + Host.ToString
-		  Else
-		    Return Username + "+" + Tag + "@" + Host.ToString
-		  End If
+		  Return Username + "@" + Host.ToString
 		End Function
 	#tag EndMethod
 
@@ -98,10 +88,6 @@ Protected Class EMailAddress
 
 	#tag Property, Flags = &h21
 		Private mHost As URIHelpers.Hostname
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		Tag As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
