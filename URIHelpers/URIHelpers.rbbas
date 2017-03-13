@@ -43,12 +43,17 @@ Protected Module URIHelpers
 		Protected Function IsLiteralV4(Hostname As String) As Boolean
 		  ' Returns True if the Hostname string is a legal IPv4 address literal
 		  Dim s() As String = Split(Hostname, ".")
-		  Return _
-		  UBound(s) = 3 And _
-		  IsNumeric(s(0)) And Val(s(0)) >= 0 And Val(s(0)) <= 255 And _
-		  IsNumeric(s(1)) And Val(s(1)) >= 0 And Val(s(1)) <= 255 And _
-		  IsNumeric(s(2)) And Val(s(2)) >= 0 And Val(s(2)) <= 255 And _
-		  IsNumeric(s(3)) And Val(s(3)) >= 0 And Val(s(3)) <= 255
+		  If UBound(s) <> 3 Then Return False
+		  For i As Integer = 0 To 3
+		    If Not IsNumeric(s(i)) Then Return False
+		    Select Case Val(s(i))
+		    Case 0 To 255
+		      Continue
+		    Else
+		      Return False
+		    End Select
+		  Next
+		  Return True
 		End Function
 	#tag EndMethod
 
