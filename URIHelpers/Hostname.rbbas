@@ -130,6 +130,20 @@ Protected Class Hostname
 	#tag EndNote
 
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  ' Returns True if the domain name is an International Domain Name
+			  If Me.IsLiteral Then Return False
+			  For i As Integer = 0 To UBound(mSubdomains)
+			    If Left(Me.SubDomain(i), 4) = "xn--" Then Return True
+			  Next
+			  Return False
+			End Get
+		#tag EndGetter
+		IsIDN As Boolean
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h1
 		Protected mSubdomains() As String
 	#tag EndProperty
