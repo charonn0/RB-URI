@@ -75,7 +75,8 @@ Class URI
 		    End If
 		    
 		    Dim auth As Integer = Instr(URL, "/")
-		    Dim authority As String = Left(URL, auth - 1)
+		    Dim authority As String = URL
+		    If auth > 0 Then authority = Left(URL, auth - 1)
 		    If InStr(authority, "@") > 0 Then //  USER:PASS@Domain
 		      Dim userinfo As String = NthField(authority, "@", 1)
 		      authority = authority.Replace(userinfo + "@", "")
