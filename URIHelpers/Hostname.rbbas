@@ -116,8 +116,8 @@ Protected Class Hostname
 
 
 	#tag Note, Name = Subdomain order
-		A internet domain name is read from right to left, with the leftmost name part being the zeroth subdomain and then
-		rightmost part being at SubDomainCount-1
+		A internet domain name is read from right to left, with the rightmost name part being the zeroth subdomain and then
+		leftmost part being at SubDomainCount-1
 		
 		For example, the domain name "sub2.sub1.domain.tld" would be represented as:
 		
